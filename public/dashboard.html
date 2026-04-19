@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ONCLICK | Dispatch Dashboard</title>
+  <meta name="description" content="ONCLICK live dispatcher dashboard with AI triage feed and real-time map."/>
+  <link rel="stylesheet" href="/style.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      display: flex;
+      flex-direction: column;
+      background: #0c0e12;
+      color: #e2e2e8;
+    }
+
+    /* ── Top Bar ────────────────────────────── */
+    .top-bar {
+      height: 56px;
+      flex-shrink: 0;
+      background: rgba(10,12,18,0.98);
+      border-bottom: 1px solid rgba(0,229,255,0.1);
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      gap: 20px;
+      z-index: 100;
+      box-shadow: 0 0 30px rgba(0,229,255,0.04);
+    }
+    .top-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+      color: #00e5ff;
+      white-space: nowrap;
+    }
+    .top-logo span { color: rgba(195,245,255,0.35); font-weight: 300; margin-left: 8px; }
+    .top-nav { display: flex; gap: 16px; }
+    .top-nav a {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(186,201,204,0.6);
+      text-decoration: none;
+      transition: color 0.15s;
+      padding-bottom: 2px;
+    }
+    .top-nav a.active { color: #00e5ff; border-bottom: 2px solid #00e5ff; }
+    .top-nav a:hover { color: #00e5ff; }
+    .top-spacer { flex: 1; }
+
+    .stat-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .stat-chip .val { font-size: 0.9rem; color: white; }
+    .stat-chip.critical { border-color: rgba(255,59,59,0.3); color: #ff8080; }
+    .stat-chip.cyan     { border-color: rgba(0,229,255,0.2); color: #00e5ff; }
+
+    .deploy-btn {
+      padding: 7px 20px;
+      background: linear-gradient(135deg, #006875, #00e5ff);
+      border: none;
+      border-radius: 6px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #00363d;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .deploy-btn:hover { filter: brightness(1.1); }
+    .deploy-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── Alert bar ──────────────────────────── */
+    .alert-bar {
+      flex-shrink: 0;
+      background: rgba(197,2,11,0.9);
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: all 0.3s;
+    }
+    .alert-bar.hidden { display: none; }
+    .alert-bar .lft { display: flex; align-items: center; gap: 10px; }
+    .alert-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: white;
+    }
+    .alert-sub { font-size: 0.65rem; color: rgba(255,255,255,0.75); }
+
+    /* ── Body layout ────────────────────────── */
+    .body-layout {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+    #map { flex: 1; z-index: 0; }
+
+    /* ── Sidebar ────────────────────────────── */
+    .sidebar {
+      width: 340px;
+      flex-shrink: 0;
+      background: #111318;
+      border-left: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .sidebar-section {
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .sidebar-head {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(0,229,255,0.7);
+      padding: 14px 16px 10px;
+    }
+
+    /* Notification buttons */
+    .notif-grid { display: flex; flex-direction: column; gap: 6px; padding: 0 16px 14px; }
+    .notif-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: #1a1c22;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #bac9cc;
+    }
+    .notif-btn:hover { background: #1e2028; border-color: rgba(0,229,255,0.2); color: #00e5ff; }
+
+    /* Triage feed */
+    .triage-feed {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .triage-feed::-webkit-scrollbar { width: 4px; }
+    .triage-feed::-webkit-scrollbar-track { background: transparent; }
+    .triage-feed::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+    .feed-card {
+      background: #1a1c22;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .feed-card:hover { border-color: rgba(0,229,255,0.2); background: #1e2028; }
+    .feed-card.new-entry { animation: slide-in 0.35s ease both; }
+    @keyframes slide-in {
+      from { opacity: 0; transform: translateX(20px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .feed-row1 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .feed-badges { display: flex; gap: 5px; flex-wrap: wrap; }
+    .feed-time { font-size: 0.6rem; color: var(--text-secondary); font-family: 'Inter', sans-serif; }
+    .feed-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.72rem; font-weight: 700; color: white; margin-bottom: 3px; text-transform: uppercase; }
+    .feed-reason { font-size: 0.65rem; color: #8a9aad; line-height: 1.4; }
+    .feed-deploy-btn {
+      margin-top: 8px;
+      padding: 5px 12px;
+      background: rgba(0,229,255,0.1);
+      border: 1px solid rgba(0,229,255,0.25);
+      border-radius: 6px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #00e5ff;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .feed-deploy-btn:hover { background: rgba(0,229,255,0.2); }
+    .feed-deploy-btn.deployed {
+      background: rgba(34,197,94,0.15);
+      border-color: rgba(34,197,94,0.3);
+      color: #22c55e;
+      cursor: default;
+    }
+
+    /* Badge styles */
+    .badge {
+      display: inline-block;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+    .badge-critical { background: rgba(255,59,59,0.2); color: #ff7070; border: 1px solid rgba(255,59,59,0.3); }
+    .badge-urgent   { background: rgba(255,165,0,0.15); color: #ffa500; border: 1px solid rgba(255,165,0,0.25); }
+    .badge-stable   { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+    .badge-disaster { background: rgba(79,127,255,0.2); color: #7da4ff; border: 1px solid rgba(79,127,255,0.3); }
+    .badge-emergency{ background: rgba(255,59,59,0.15); color: #ff9090; border: 1px solid rgba(255,59,59,0.25); }
+
+    /* Map popup overrides */
+    .leaflet-popup-content-wrapper {
+      background: #1a1c22 !important;
+      border: 1px solid rgba(255,255,255,0.1) !important;
+      border-radius: 10px !important;
+      color: #e2e2e8 !important;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important;
+    }
+    .leaflet-popup-tip { background: #1a1c22 !important; }
+    .leaflet-popup-close-button { color: #8a9aad !important; }
+    .popup-content { font-family: 'Space Grotesk', sans-serif; min-width: 200px; }
+    .popup-type { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
+    .popup-subtype { font-size: 0.9rem; font-weight: 700; color: white; margin-bottom: 4px; }
+    .popup-level { font-size: 0.65rem; color: #8a9aad; margin-bottom: 8px; }
+    .popup-notes { font-size: 0.7rem; color: #bac9cc; font-style: italic; margin-bottom: 10px; border-top: 1px solid rgba(255,255,255,0.07); padding-top: 8px; }
+    .popup-deploy {
+      width: 100%;
+      padding: 8px;
+      background: linear-gradient(135deg, #c5020b, #ff3b3b);
+      border: none;
+      border-radius: 6px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: white;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .popup-deploy.disaster-deploy { background: linear-gradient(135deg, #3a65e0, #4f7fff); }
+    .popup-deploy:hover { filter: brightness(1.1); }
+    .popup-deploy.done { background: rgba(34,197,94,0.2); color: #22c55e; cursor: default; border: 1px solid rgba(34,197,94,0.3); }
+
+    /* Ambulance marker */
+    .amb-icon {
+      font-size: 1.5rem;
+      line-height: 1;
+      filter: drop-shadow(0 2px 6px rgba(0,229,255,0.6));
+      animation: amb-bob 1s ease-in-out infinite alternate;
+    }
+    @keyframes amb-bob {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-4px); }
+    }
+
+    /* Map HUD overlay */
+    .map-hud {
+      position: absolute;
+      top: 12px; left: 12px;
+      z-index: 50;
+      pointer-events: none;
+    }
+    .map-hud-pill {
+      background: rgba(10,12,18,0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0,229,255,0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #00e5ff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .map-live-dot {
+      width: 7px; height: 7px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: blink 1.2s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+    }
+
+    /* Legend */
+    .map-legend {
+      position: absolute;
+      bottom: 30px; left: 12px;
+      z-index: 50;
+      pointer-events: none;
+      background: rgba(10,12,18,0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #8a9aad;
+    }
+    .legend-triangle {
+      width: 0; height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-bottom: 12px solid #4f7fff;
+    }
+    .legend-circle {
+      width: 12px; height: 12px;
+      background: #ff3b3b;
+      border-radius: 50%;
+    }
+  </style>
+  <link rel="manifest" href="/manifest.json"/>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="top-logo">ONCLICK <span>| DISPATCH</span></div>
+    <nav class="top-nav">
+      <a href="/dashboard" class="active">MAP</a>
+      <a href="/resource">RESOURCES</a>
+      <a href="/responder">RESPONDER</a>
+      <a href="/">SOS</a>
+    </nav>
+    <div class="top-spacer"></div>
+    <div class="stat-chip critical">
+      <span>CRITICAL</span>
+      <span class="val" id="critical-count">0</span>
+    </div>
+    <div class="stat-chip cyan">
+      <span>TOTAL SOS</span>
+      <span class="val" id="total-count">0</span>
+    </div>
+    <button class="deploy-btn" id="deploy-btn">⚡ SEND HELP</button>
+  </header>
+
+  <!-- Alert Bar -->
+  <div class="alert-bar hidden" id="alert-bar">
+    <div class="lft">
+      <span style="font-size:1.2rem;">⚠️</span>
+      <div>
+        <div class="alert-title" id="alert-title">INCOMING SOS</div>
+        <div class="alert-sub" id="alert-sub">Processing...</div>
+      </div>
+    </div>
+    <button onclick="document.getElementById('alert-bar').classList.add('hidden')"
+      style="background:rgba(255,255,255,0.1);border:none;border-radius:4px;color:white;padding:4px 12px;cursor:pointer;font-size:0.7rem;">
+      DISMISS
+    </button>
+  </div>
+
+  <!-- Main content -->
+  <div class="body-layout">
+    <!-- Map -->
+    <div style="position:relative;flex:1;">
+      <div id="map"></div>
+      <!-- HUD pill -->
+      <div class="map-hud">
+        <div class="map-hud-pill">
+          <span class="map-live-dot"></span>
+          LIVE MAP — INCIDENT COMMAND
+        </div>
+      </div>
+      <!-- Legend -->
+      <div class="map-legend">
+        <div class="legend-item"><div class="legend-triangle"></div> Disaster SOS</div>
+        <div class="legend-item"><div class="legend-circle"></div> Emergency SOS</div>
+        <div class="legend-item"><span>🚑</span> Ambulance</div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-head">Mass Notification</div>
+        <div class="notif-grid">
+          <button class="notif-btn" id="notif-mesh">
+            <span>Mesh Broadcast</span>
+            <span>📡</span>
+          </button>
+          <button class="notif-btn" id="notif-sms">
+            <span>SMS Override</span>
+            <span>💬</span>
+          </button>
+          <button class="notif-btn" id="notif-email">
+            <span>Email Alert</span>
+            <span>📧</span>
+          </button>
+        </div>
+      </div>
+      <div class="sidebar-section" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+        <div class="sidebar-head">Live AI Triage Feed</div>
+        <div class="triage-feed" id="triage-feed">
+          <div style="font-size:0.68rem;color:#4a5568;text-align:center;padding:20px 0;">
+            Waiting for incoming SOS signals...
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // ── Map init ─────────────────────────────────────────────
+    const map = L.map('map', { zoomControl: true }).setView([18.5204, 73.8567], 13);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© OpenStreetMap contributors © CARTO',
+      subdomains: 'abcd',
+      maxZoom: 20
+    }).addTo(map);
+
+    // ── Marker helpers ───────────────────────────────────────
+    function makeDisasterIcon(level) {
+      const color = { CRITICAL:'#ff3b3b', URGENT:'#ffa500', STABLE:'#4f7fff' }[level] || '#4f7fff';
+      return L.divIcon({
+        className: '',
+        html: `<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="14,2 26,25 2,25" fill="${color}" stroke="white" stroke-width="1.5"
+            style="filter:drop-shadow(0 0 8px ${color})"/>
+        </svg>`,
+        iconSize: [28, 28], iconAnchor: [14, 25]
+      });
+    }
+
+    function makeEmergencyIcon(level) {
+      const color = { CRITICAL:'#ff3b3b', URGENT:'#ffa500', STABLE:'#22c55e' }[level] || '#ff3b3b';
+      return L.divIcon({
+        className: '',
+        html: `<div style="width:20px;height:20px;background:${color};border-radius:50%;
+          border:2.5px solid white;box-shadow:0 0 12px ${color};
+          animation:pulse-marker 1.8s infinite;"></div>
+          <style>@keyframes pulse-marker{0%{box-shadow:0 0 0 0 ${color}99}70%{box-shadow:0 0 0 12px transparent}100%{box-shadow:0 0 0 0 transparent}}</style>`,
+        iconSize: [20, 20], iconAnchor: [10, 10]
+      });
+    }
+
+    function makeAmbulanceIcon() {
+      return L.divIcon({
+        className: '',
+        html: `<div class="amb-icon">🚑</div>`,
+        iconSize: [32, 32], iconAnchor: [16, 16]
+      });
+    }
+
+    // ── State ────────────────────────────────────────────────
+    const socket = io();
+    let incidents = [];
+    let latestSosGps = { lat: 18.5204, lon: 73.8567 };
+    let latestSosId = null;
+    let criticalCount = 0;
+    let totalCount = 0;
+    let ambMarker = null;
+
+    // ── Socket listeners ─────────────────────────────────────
+    socket.on('new_sos_alert', (data) => {
+      totalCount++;
+      document.getElementById('total-count').textContent = totalCount;
+      if (data.triage && data.triage.level === 'CRITICAL') {
+        criticalCount++;
+        document.getElementById('critical-count').textContent = criticalCount;
+      }
+
+      latestSosGps = { lat: data.lat, lon: data.lon };
+      latestSosId = data.id;
+      incidents.push(data);
+
+      // Show alert bar
+      const bar = document.getElementById('alert-bar');
+      bar.classList.remove('hidden');
+      document.getElementById('alert-title').textContent =
+        `${data.type} SOS — ${data.subtype || ''}`;
+      document.getElementById('alert-sub').textContent =
+        data.triage ? `AI: ${data.triage.level} · ${data.triage.reason}` : 'Processing...';
+
+      // Place marker on map
+      const marker = data.type === 'DISASTER'
+        ? L.marker([data.lat, data.lon], { icon: makeDisasterIcon(data.triage?.level) })
+        : L.marker([data.lat, data.lon], { icon: makeEmergencyIcon(data.triage?.level) });
+
+      const levelClass = (data.triage?.level || 'STABLE').toLowerCase();
+      const typeClass  = (data.type || 'EMERGENCY').toLowerCase();
+      const popupHtml = `
+        <div class="popup-content">
+          <div class="popup-type" style="color:${data.type==='DISASTER'?'#7da4ff':'#ff8080'}">
+            ${data.type === 'DISASTER' ? '▲' : '●'} ${data.type}
+          </div>
+          <div class="popup-subtype">${data.subtype || '—'}</div>
+          <div class="popup-level">
+            <span class="badge badge-${levelClass}">${data.triage?.level || '?'}</span>
+            &nbsp;${data.triage?.reason || ''}
+          </div>
+          ${data.notes ? `<div class="popup-notes">"${data.notes}"</div>` : ''}
+          <button class="popup-deploy ${data.type==='DISASTER'?'disaster-deploy':''}" id="popup-deploy-${data.id}"
+            onclick="deployFromPopup('${data.id}', ${data.lat}, ${data.lon})">
+            ⚡ Send Help
+          </button>
+        </div>
+      `;
+      marker.addTo(map).bindPopup(popupHtml, { maxWidth: 260 });
+      map.flyTo([data.lat, data.lon], 15, { duration: 1 });
+
+      // Add to triage feed
+      addFeedCard(data);
+    });
+
+    socket.on('ambulance_position', (data) => {
+      if (!data.lat || !data.lon) return;
+      if (ambMarker) {
+        ambMarker.setLatLng([data.lat, data.lon]);
+      } else {
+        ambMarker = L.marker([data.lat, data.lon], { icon: makeAmbulanceIcon() }).addTo(map)
+          .bindPopup('<div class="popup-content"><div class="popup-subtype">🚑 Ambulance en route</div></div>');
+      }
+    });
+
+    // ── Triage feed card ──────────────────────────────────────
+    function addFeedCard(data) {
+      const feed = document.getElementById('triage-feed');
+      const empty = feed.querySelector('[style*="color:#4a5568"]');
+      if (empty) empty.remove();
+
+      const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
+      const level = (data.triage?.level || 'STABLE');
+      const levelClass = level.toLowerCase();
+      const typeClass  = (data.type || 'EMERGENCY').toLowerCase();
+
+      const card = document.createElement('div');
+      card.className = 'feed-card new-entry';
+      card.dataset.id = data.id;
+      card.innerHTML = `
+        <div class="feed-row1">
+          <div class="feed-badges">
+            <span class="badge badge-${levelClass}">${level}</span>
+            <span class="badge badge-${typeClass}">${data.type}</span>
+          </div>
+          <span class="feed-time">${time}</span>
+        </div>
+        <div class="feed-title">${data.subtype || data.type} · ${data.type==='DISASTER'?'▲':'●'}</div>
+        <div class="feed-reason">${data.triage?.reason || 'Awaiting AI analysis...'}</div>
+        <button class="feed-deploy-btn" id="feed-deploy-${data.id}"
+          onclick="deployFromFeed('${data.id}', ${data.lat}, ${data.lon})">
+          ⚡ Send Help
+        </button>
+      `;
+      feed.prepend(card);
+    }
+
+    // ── Deploy actions ────────────────────────────────────────
+    function deployFromPopup(id, lat, lon) {
+      socket.emit('deploy_unit', { targetGps: { lat, lon }, sosId: id });
+      const btn = document.getElementById('popup-deploy-' + id);
+      if (btn) { btn.textContent = '✓ Deployed'; btn.className += ' done'; btn.disabled = true; }
+      markFeedDeployed(id);
+    }
+    function deployFromFeed(id, lat, lon) {
+      socket.emit('deploy_unit', { targetGps: { lat, lon }, sosId: id });
+      markFeedDeployed(id);
+    }
+    function markFeedDeployed(id) {
+      const btn = document.getElementById('feed-deploy-' + id);
+      if (btn) { btn.textContent = '✓ Help Sent'; btn.className = 'feed-deploy-btn deployed'; btn.disabled = true; }
+    }
+
+    // ── Global DEPLOY button ──────────────────────────────────
+    document.getElementById('deploy-btn').addEventListener('click', () => {
+      if (!latestSosId) {
+        socket.emit('deploy_unit', { targetGps: latestSosGps, sosId: 'manual' });
+      } else {
+        deployFromFeed(latestSosId, latestSosGps.lat, latestSosGps.lon);
+      }
+    });
+
+    // ── Notification buttons ──────────────────────────────────
+    document.getElementById('notif-mesh').addEventListener('click', () => alert('📡 Mesh broadcast sent to all active nodes.'));
+    document.getElementById('notif-sms').addEventListener('click', () => alert('💬 SMS override sent to emergency contacts.'));
+    document.getElementById('notif-email').addEventListener('click', () => alert('📧 Alert email dispatched to command center.'));
+
+    // ── Make deploy functions global ──────────────────────────
+    window.deployFromPopup = deployFromPopup;
+    window.deployFromFeed = deployFromFeed;
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(err => console.error('SW error', err));
+      });
+    }
+  </script>
+</body>
+</html>

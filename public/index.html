@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>ONCLICK — One Tap. No App. Help on the Way.</title>
+  <link rel="stylesheet" href="/style.css"/>
+  <style>
+    body {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* ── Hero ────────────────────────────────────────────────── */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: calc(var(--nav-h) + 24px) 20px 20px;
+      text-align: center;
+      gap: 8px;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      opacity: 0.75;
+      animation: fade-up 0.4s ease both;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.6rem, 11vw, 5rem);
+      font-weight: 900;
+      line-height: 0.92;
+      color: white;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      animation: fade-up 0.45s 0.08s ease both;
+    }
+    .hero-title .accent { color: var(--cyan); }
+    .hero-tagline {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.08em;
+      margin-top: 6px;
+      animation: fade-up 0.45s 0.16s ease both;
+    }
+    .hero-divider {
+      width: 32px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      margin: 4px auto;
+      animation: fade-up 0.45s 0.2s ease both;
+    }
+
+    /* ── GPS Bar ─────────────────────────────────────────────── */
+    .gps-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,229,255,0.04);
+      border: 1px solid rgba(0,229,255,0.1);
+      border-radius: var(--radius-sm);
+      padding: 7px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: var(--cyan);
+      letter-spacing: 0.06em;
+      max-width: 340px;
+      width: 100%;
+      animation: fade-up 0.45s 0.24s ease both;
+    }
+    .gps-bar-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: var(--stable);
+      animation: blink 1s infinite;
+    }
+
+    /* ── PANIC BUTTON ─────────────────────────────────────────── */
+    .panic-wrap {
+      width: 100%;
+      max-width: 480px;
+      animation: fade-up 0.45s 0.3s ease both;
+    }
+    .panic-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #8b0000, #c5020b, #ff3b3b);
+      border: none;
+      border-radius: var(--radius-lg);
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: white;
+      cursor: pointer;
+      transition: all var(--trans-fast);
+      box-shadow: 0 0 0 0 rgba(255,59,59,0.4), var(--shadow-md);
+      animation: panic-pulse 2s infinite;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      display: none;
+    }
+    @keyframes panic-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,59,59,0.3), var(--shadow-md); }
+      50%       { box-shadow: 0 0 0 16px rgba(255,59,59,0), var(--shadow-md); }
+    }
+    .panic-btn:active { transform: scale(0.97); }
+    .panic-sub {
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      margin-top: 6px;
+      text-transform: uppercase;
+    }
+    .panic-btn.visible { display: block; }
+
+    /* ── SOS Cards ───────────────────────────────────────────── */
+    .cards-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 8px 20px 16px;
+      animation: fade-up 0.45s 0.32s ease both;
+      position: relative;
+      z-index: 2;
+    }
+    @media (min-width: 480px) {
+      .cards-section { flex-direction: row; }
+    }
+
+    .sos-card {
+      flex: 1;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 28px 18px 22px;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      text-decoration: none;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .sos-card:active { transform: scale(0.96); }
+
+    /* Disaster card */
+    .sos-card.disaster {
+      background: linear-gradient(150deg, #0a1228 0%, #0c1840 60%, #0e1f52 100%);
+      border: 1.5px solid rgba(79,127,255,0.25);
+      animation: pulse-blue 2.8s infinite 0.8s;
+    }
+    @keyframes pulse-blue {
+      0%,100% { box-shadow: 0 0 0 0 rgba(79,127,255,0.2), var(--shadow-sm); }
+      60%      { box-shadow: 0 0 0 12px rgba(79,127,255,0), var(--shadow-sm); }
+    }
+    .sos-card.disaster:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(79,127,255,0.2);
+      border-color: rgba(79,127,255,0.5);
+    }
+
+    /* Emergency card */
+    .sos-card.emergency {
+      background: linear-gradient(150deg, #180808 0%, #200c0c 60%, #2a0d0d 100%);
+      border: 1.5px solid rgba(255,59,59,0.25);
+      animation: pulse-red 2.8s infinite 0.2s;
+    }
+    @keyframes pulse-red {
+      0%,100% { box-shadow: 0 0 0 0 rgba(255,59,59,0.2), var(--shadow-sm); }
+      60%      { box-shadow: 0 0 0 12px rgba(255,59,59,0), var(--shadow-sm); }
+    }
+    .sos-card.emergency:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(255,59,59,0.2);
+      border-color: rgba(255,59,59,0.5);
+    }
+
+    /* Card tag */
+    .card-tag {
+      position: absolute;
+      top: 10px; right: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.5rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 3px;
+    }
+    .disaster .card-tag  { background: rgba(79,127,255,0.15); color: #7da4ff; border: 1px solid rgba(79,127,255,0.25); }
+    .emergency .card-tag { background: rgba(255,59,59,0.15);  color: #ff8080; border: 1px solid rgba(255,59,59,0.25); }
+
+    /* Card icon */
+    .card-icon-wrap {
+      width: 64px; height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+    .disaster  .card-icon-wrap { background: rgba(79,127,255,0.12); }
+    .emergency .card-icon-wrap { background: rgba(255,59,59,0.12); }
+
+    .card-type {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: white;
+      line-height: 1;
+    }
+    .disaster  .card-type { color: #90b0ff; }
+    .emergency .card-type { color: #ff8888; }
+
+    .card-subtypes {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+      text-align: center;
+      line-height: 1.7;
+      letter-spacing: 0.04em;
+    }
+
+    .card-cta {
+      margin-top: 6px;
+      padding: 9px 24px;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: all var(--trans-fast);
+    }
+    .disaster  .card-cta { background: linear-gradient(135deg, #2a4dc0, #4f7fff); box-shadow: 0 4px 14px rgba(79,127,255,0.25); }
+    .emergency .card-cta { background: linear-gradient(135deg, #a00008, #ff3b3b); box-shadow: 0 4px 14px rgba(255,59,59,0.25); }
+    .card-cta:active { transform: scale(0.95); }
+
+    /* Shine sweep */
+    .sos-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -60%;
+      width: 45%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+      transform: skewX(-15deg);
+      transition: left 0.6s ease;
+    }
+    .sos-card:hover::before { left: 120%; }
+
+    /* ── System status bar ───────────────────────────────────── */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 10px 20px 16px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      position: relative;
+      z-index: 2;
+    }
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0 14px;
+      border-right: 1px solid rgba(255,255,255,0.05);
+    }
+    .status-item:last-child { border-right: none; }
+    .status-item .si-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+    }
+    .si-dot.green { background: var(--stable); }
+    .si-dot.cyan  { background: var(--cyan); }
+    .si-dot.amber { background: var(--urgent); }
+    .si-dot.red   { background: var(--critical); animation: blink-fast 0.4s infinite; }
+
+    /* ── Panic toggle (persistent bottom btn) ────────────────── */
+    .quick-sos-fab {
+      position: fixed;
+      bottom: 22px;
+      right: 18px;
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .fab-label {
+      font-family: var(--font-mono);
+      font-size: 0.52rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      background: rgba(8,10,15,0.9);
+      padding: 3px 8px;
+      border-radius: 4px;
+      opacity: 0;
+      transition: opacity var(--trans-med);
+      white-space: nowrap;
+    }
+    .quick-sos-fab:hover .fab-label { opacity: 1; }
+    .fab-btn {
+      width: 54px; height: 54px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #9c0000, #ff3b3b);
+      border: 2px solid rgba(255,59,59,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(255,59,59,0.35);
+      transition: all var(--trans-fast);
+      animation: bounce-soft 3s ease-in-out infinite;
+    }
+    .fab-btn:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(255,59,59,0.5); }
+    .fab-btn:active { transform: scale(0.95); }
+
+    /* ── Offline banner ──────────────────────────────────────── */
+    .offline-banner {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(255,140,0,0.12);
+      border-top: 1px solid rgba(255,140,0,0.25);
+      padding: 8px 18px;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: var(--urgent);
+      letter-spacing: 0.06em;
+      z-index: 400;
+      text-align: center;
+    }
+    .offline-banner.show { display: block; }
+  </style>
+</head>
+<body class="scanline-overlay">
+
+  <div class="grid-bg"></div>
+  <div class="noise-overlay"></div>
+  <div class="scan-beam"></div>
+  <div class="hud-corner hud-tl"></div>
+  <div class="hud-corner hud-tr"></div>
+  <div class="hud-corner hud-bl"></div>
+  <div class="hud-corner hud-br"></div>
+
+  <!-- Navbar -->
+  <nav class="nav-bar">
+    <div class="nav-logo"><em>ON</em>CLICK</div>
+    <div class="nav-spacer"></div>
+    <div class="nav-time" id="nav-clock">--:--:--</div>
+    <div class="nav-badge">
+      <span class="nav-dot"></span>
+      System Active
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <p class="hero-eyebrow">Zero-Barrier Emergency Response System</p>
+    <h1 class="hero-title">ONE TAP.<br/><span class="accent">HELP</span><br/>ON THE WAY.</h1>
+    <div class="hero-divider"></div>
+    <p class="hero-tagline">No app · No internet needed · GPS auto-captured</p>
+    <div class="gps-bar">
+      <span class="gps-bar-dot" id="gps-dot"></span>
+      <span id="gps-text">Acquiring GPS location...</span>
+    </div>
+  </section>
+
+  <!-- SOS Cards -->
+  <section class="cards-section">
+
+    <a class="sos-card disaster" href="/disaster" aria-label="Disaster SOS">
+      <span class="card-tag">Nature / Structural</span>
+      <div class="card-icon-wrap">🌊</div>
+      <div class="card-type">Disaster SOS</div>
+      <div class="card-subtypes">
+        Flood · Earthquake · Fire<br/>
+        Collapse · Storm · Gas Leak
+      </div>
+      <div class="card-cta">Tap to Activate</div>
+    </a>
+
+    <a class="sos-card emergency" href="/emergency" aria-label="Emergency SOS">
+      <span class="card-tag">Medical / Rescue</span>
+      <div class="card-icon-wrap">🚨</div>
+      <div class="card-type">Emergency SOS</div>
+      <div class="card-subtypes">
+        Medical · Accident · Injury<br/>
+        Trapped · Unconscious · Pregnancy
+      </div>
+      <div class="card-cta">Tap to Activate</div>
+    </a>
+
+  </section>
+
+  <!-- Status bar -->
+  <footer class="status-bar">
+    <div class="status-item"><span class="si-dot green"></span>AI Triage</div>
+    <div class="status-item"><span class="si-dot cyan"></span>Offline Ready</div>
+    <div class="status-item"><span class="si-dot green"></span>Dispatcher Live</div>
+    <div class="status-item"><span class="si-dot amber"></span>0 Active Incidents</div>
+  </footer>
+
+  <!-- Quick SOS FAB (panic for someone who can't navigate) -->
+  <div class="quick-sos-fab">
+    <div class="fab-label">Quick Emergency SOS</div>
+    <button class="fab-btn" aria-label="Quick Emergency SOS" onclick="quickSOS()">🆘</button>
+  </div>
+
+  <!-- Offline notice -->
+  <div class="offline-banner" id="offline-banner">
+    ⚡ No internet detected — ONCLICK is running in offline mode. All features still work.
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // ── Live clock ──────────────────────────────────────────
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('nav-clock').textContent =
+        now.toLocaleTimeString('en-IN', { hour12: false, hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // ── GPS capture ─────────────────────────────────────────
+    const gpsDot  = document.getElementById('gps-dot');
+    const gpsText = document.getElementById('gps-text');
+
+    function setGPS(lat, lon) {
+      sessionStorage.setItem('onclick_lat', lat);
+      sessionStorage.setItem('onclick_lon', lon);
+      gpsText.textContent = `GPS Locked — ${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+      gpsDot.className = 'gps-bar-dot'; // back to stable green
+    }
+
+    const storedLat = sessionStorage.getItem('onclick_lat');
+    if (storedLat) {
+      setGPS(parseFloat(storedLat), parseFloat(sessionStorage.getItem('onclick_lon')));
+    } else if (navigator.geolocation) {
+      gpsDot.classList.add('searching');
+      navigator.geolocation.getCurrentPosition(
+        (pos) => setGPS(pos.coords.latitude, pos.coords.longitude),
+        () => {
+          gpsDot.classList.add('error');
+          gpsText.textContent = 'GPS unavailable — using fallback location';
+        },
+        { enableHighAccuracy: true, timeout: 9000 }
+      );
+    }
+
+    // ── Offline detection ───────────────────────────────────
+    function checkOnline() {
+      document.getElementById('offline-banner').classList.toggle('show', !navigator.onLine);
+    }
+    window.addEventListener('offline', checkOnline);
+    window.addEventListener('online', checkOnline);
+    checkOnline();
+
+    // ── Quick SOS (panic FAB) ───────────────────────────────
+    function quickSOS() {
+      // Navigate directly to emergency SOS
+      window.location.href = '/emergency?panic=1';
+    }
+
+    // ── Live incident count via Socket.io ───────────────────
+    try {
+      const socket = io({ reconnectionAttempts: 3 });
+      socket.on('incident_count', (data) => {
+        const el = document.querySelector('.status-item:last-child');
+        if (el) el.innerHTML = `<span class="si-dot ${data.count > 0 ? 'amber' : 'green'}"></span>${data.count} Active Incident${data.count !== 1 ? 's' : ''}`;
+      });
+    } catch(e) {}
+  </script>
+</body>
+</html>

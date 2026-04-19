@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>ONCLICK | Disaster SOS</title>
+  <link rel="stylesheet" href="/style.css"/>
+  <style>
+    :root {
+      --theme:     #4f7fff;
+      --theme-dim: rgba(79,127,255,0.1);
+      --theme-glow:rgba(79,127,255,0.25);
+    }
+    body { min-height:100dvh; display:flex; flex-direction:column; }
+
+    .disaster-bg {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 55% 35% at 50% -5%, rgba(20,40,120,0.16), transparent),
+        radial-gradient(ellipse 40% 30% at 10% 90%, rgba(10,20,80,0.1), transparent);
+      pointer-events: none;
+    }
+
+    .page-wrap {
+      flex: 1;
+      padding: calc(var(--nav-h) + 16px) 20px 30px;
+      max-width: 500px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .page-header { display:flex; flex-direction:column; gap:6px; animation:fade-up 0.4s ease both; }
+    .eyebrow { display:flex; align-items:center; justify-content:space-between; }
+    .eyebrow-text {
+      font-family: var(--font-mono);
+      font-size: 0.56rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #7da4ff;
+      opacity: 0.85;
+    }
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 7vw, 2.6rem);
+      font-weight: 900;
+      color: white;
+      line-height: 0.95;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .page-header .sub {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.04em;
+    }
+
+    .wizard-step { display:none; flex-direction:column; gap:12px; }
+    .wizard-step.active { display:flex; animation:fade-up 0.3s ease both; }
+
+    .section-label { color: #7da4ff !important; }
+
+    /* Disaster subtype */
+    .subtype-btn.selected { border-color: var(--theme); background: var(--theme-dim); }
+    .subtype-btn.selected .label { color: #90b0ff; }
+    .subtype-btn.selected .icon { filter: drop-shadow(0 0 6px rgba(79,127,255,0.6)); }
+
+    /* Scale selector */
+    .scale-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .scale-btn {
+      padding: 14px 10px;
+      background: var(--bg-card);
+      border: 1.5px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      cursor: pointer;
+      transition: all var(--trans-fast);
+      touch-action: manipulation;
+    }
+    .scale-btn .sc-icon { font-size: 1.3rem; }
+    .scale-btn .sc-title {
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .scale-btn .sc-desc {
+      font-family: var(--font-mono);
+      font-size: 0.56rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      line-height: 1.4;
+    }
+    .scale-btn.selected { border-color: var(--theme); background: var(--theme-dim); }
+    .scale-btn.selected .sc-title { color: #90b0ff; }
+    .scale-btn:active { transform: scale(0.96); }
+
+    /* Safety question */
+    .safety-row { display:flex; gap:10px; }
+    .safety-btn {
+      flex: 1;
+      padding: 16px 10px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid rgba(255,255,255,0.08);
+      background: var(--bg-card);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all var(--trans-fast);
+      touch-action: manipulation;
+    }
+    .safety-btn .sf-icon { font-size: 1.6rem; }
+    .safety-btn .sf-label {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+    }
+    .safety-btn.sel-safe    { border-color: var(--stable);  background: rgba(0,212,106,0.08); }
+    .safety-btn.sel-unsafe  { border-color: var(--critical); background: rgba(255,59,59,0.08); }
+    .safety-btn.sel-safe  .sf-label  { color: var(--stable); }
+    .safety-btn.sel-unsafe .sf-label { color: var(--critical); }
+    .safety-btn:active { transform: scale(0.95); }
+
+    /* Confirm summary */
+    .confirm-summary {
+      background: var(--bg-card);
+      border: 1px solid rgba(79,127,255,0.2);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .confirm-row { display:flex; align-items:center; gap:10px; font-family:var(--font-mono); font-size:0.66rem; }
+    .cr-icon { font-size:1rem; flex-shrink:0; }
+    .cr-key  { color:var(--text-muted); min-width:80px; }
+    .cr-val  { color:var(--text-primary); font-weight:500; }
+    .confirm-sep { height:1px; background:rgba(255,255,255,0.05); }
+
+    /* Auto-send */
+    .autosend-count { color: var(--theme); }
+    .autosend-bar { border-color: rgba(79,127,255,0.2); }
+
+    /* Send button */
+    .btn-send {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #1a30a0 0%, #2a50d0 50%, #4f7fff 100%);
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: white;
+      cursor: pointer;
+      transition: all var(--trans-fast);
+      box-shadow: 0 6px 24px rgba(79,127,255,0.3);
+      touch-action: manipulation;
+      animation: pulse-blue-btn 2.5s infinite;
+    }
+    @keyframes pulse-blue-btn {
+      0%, 100% { box-shadow: 0 6px 24px rgba(79,127,255,0.2); }
+      50%       { box-shadow: 0 6px 32px rgba(79,127,255,0.45); }
+    }
+    .btn-send:active { transform: scale(0.97); }
+    .btn-send:disabled { opacity: 0.5; animation: none; cursor: not-allowed; }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 12px;
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--trans-fast);
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.16); color: white; }
+
+    /* Nav overrides */
+    .nav-badge { border-color: rgba(79,127,255,0.25); color: #90b0ff; background: rgba(79,127,255,0.06); }
+    .nav-badge .nav-dot { background: var(--theme); animation: blink 1.2s infinite; }
+    .send-ring { border-top-color: var(--theme); }
+    .send-label { color: #90b0ff !important; }
+  </style>
+</head>
+<body class="scanline-overlay">
+
+  <div class="disaster-bg"></div>
+  <div class="noise-overlay"></div>
+  <div class="hud-corner hud-tl"></div>
+  <div class="hud-corner hud-tr"></div>
+  <div class="hud-corner hud-bl"></div>
+  <div class="hud-corner hud-br"></div>
+
+  <nav class="nav-bar">
+    <a class="nav-back" href="/">← Back</a>
+    <div class="nav-logo"><em>ON</em>CLICK <span class="nav-slash">/ DISASTER</span></div>
+    <div class="nav-spacer"></div>
+    <div class="nav-badge">
+      <span class="nav-dot"></span>
+      Disaster Mode
+    </div>
+  </nav>
+
+  <!-- Sending Overlay -->
+  <div class="sending-overlay" id="sending-overlay">
+    <div class="send-ring blue-ring"></div>
+    <div class="send-label" style="font-family:var(--font-display);font-size:1.4rem;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;color:#90b0ff;">Transmitting SOS...</div>
+    <div class="send-sub">Do not close — contacting dispatcher</div>
+  </div>
+
+  <main class="page-wrap">
+
+    <!-- Header -->
+    <div class="page-header">
+      <div class="eyebrow">
+        <span class="eyebrow-text">🌊 Disaster SOS</span>
+        <div class="step-indicator">
+          <div class="step-dot active" id="sdot-1"></div>
+          <div class="step-dot" id="sdot-2"></div>
+          <div class="step-dot" id="sdot-3"></div>
+        </div>
+      </div>
+      <h1 id="step-title">What type of<br/>disaster is this?</h1>
+      <div class="sub" id="step-sub">Tap the type that matches your situation. GPS captured automatically.</div>
+    </div>
+
+    <!-- GPS -->
+    <div class="gps-strip">
+      <span class="gps-dot searching" id="gps-dot"></span>
+      <span id="gps-text" style="font-size:0.62rem;letter-spacing:0.06em;">Acquiring location...</span>
+    </div>
+
+    <!-- ── STEP 1: Disaster type ── -->
+    <div class="wizard-step active" id="step-1">
+      <div>
+        <div class="section-label">Select disaster type</div>
+        <div class="error-hint" id="subtype-error">⚠ Please select a disaster type first</div>
+        <div class="subtype-grid">
+          <button class="subtype-btn" data-subtype="FLOOD">
+            <span class="icon">🌊</span><span class="label">Flood</span>
+          </button>
+          <button class="subtype-btn" data-subtype="EARTHQUAKE">
+            <span class="icon">🌍</span><span class="label">Earthquake</span>
+          </button>
+          <button class="subtype-btn" data-subtype="FIRE">
+            <span class="icon">🔥</span><span class="label">Fire</span>
+          </button>
+          <button class="subtype-btn" data-subtype="COLLAPSE">
+            <span class="icon">🏚️</span><span class="label">Collapse</span>
+          </button>
+          <button class="subtype-btn" data-subtype="STORM">
+            <span class="icon">⛈️</span><span class="label">Storm</span>
+          </button>
+          <button class="subtype-btn" data-subtype="GAS">
+            <span class="icon">☠️</span><span class="label">Gas / Chemical</span>
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-send" onclick="goStep(2)">CONTINUE →</button>
+    </div>
+
+    <!-- ── STEP 2: Scale + Safety ── -->
+    <div class="wizard-step" id="step-2">
+      <div>
+        <div class="section-label">How large is the affected area?</div>
+        <div class="scale-grid">
+          <button class="scale-btn" data-scale="INDIVIDUAL" onclick="selectScale(this,'INDIVIDUAL')">
+            <span class="sc-icon">👤</span>
+            <span class="sc-title">Individual</span>
+            <span class="sc-desc">Only I / my group is affected</span>
+          </button>
+          <button class="scale-btn" data-scale="BUILDING" onclick="selectScale(this,'BUILDING')">
+            <span class="sc-icon">🏢</span>
+            <span class="sc-title">Building</span>
+            <span class="sc-desc">Single structure affected</span>
+          </button>
+          <button class="scale-btn" data-scale="LOCALITY" onclick="selectScale(this,'LOCALITY')">
+            <span class="sc-icon">🏘️</span>
+            <span class="sc-title">Locality</span>
+            <span class="sc-desc">Street / neighbourhood</span>
+          </button>
+          <button class="scale-btn" data-scale="CITY_WIDE" onclick="selectScale(this,'CITY_WIDE')">
+            <span class="sc-icon">🌆</span>
+            <span class="sc-title">City-wide</span>
+            <span class="sc-desc">Large-scale / multiple zones</span>
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Are you currently safe?</div>
+        <div class="safety-row">
+          <button class="safety-btn" onclick="selectSafety(this,'safe')">
+            <span class="sf-icon">✅</span>
+            <span class="sf-label">I'm safe</span>
+          </button>
+          <button class="safety-btn" onclick="selectSafety(this,'unsafe')">
+            <span class="sf-icon">🆘</span>
+            <span class="sf-label">I'm in danger</span>
+          </button>
+          <button class="safety-btn" onclick="selectSafety(this,'reporting')">
+            <span class="sf-icon">📢</span>
+            <span class="sf-label">Reporting for others</span>
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">People affected</div>
+        <div class="count-row">
+          <button class="count-btn" onclick="changeCount(-1)">−</button>
+          <div>
+            <div class="count-val" id="count-val">1</div>
+            <div class="count-label">person</div>
+          </div>
+          <button class="count-btn" onclick="changeCount(1)">+</button>
+          <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-secondary);margin-left:8px;">estimated</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Describe the situation <span style="opacity:0.5;">(optional)</span></div>
+        <textarea class="notes-area" id="disaster-notes" rows="3"
+          placeholder="e.g. Water rising fast on ground floor, second floor accessible..."></textarea>
+      </div>
+
+      <div style="display:flex;gap:8px;">
+        <button class="btn-secondary" style="width:auto;padding:12px 20px;" onclick="goStep(1)">← Back</button>
+        <button class="btn-send" style="flex:1;" onclick="goStep(3)">REVIEW →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 3: Confirm ── -->
+    <div class="wizard-step" id="step-3">
+      <div class="confirm-summary">
+        <div class="confirm-row">
+          <span class="cr-icon">🌊</span>
+          <span class="cr-key">Disaster</span>
+          <span class="cr-val" id="sum-type">—</span>
+        </div>
+        <div class="confirm-sep"></div>
+        <div class="confirm-row">
+          <span class="cr-icon">📐</span>
+          <span class="cr-key">Scale</span>
+          <span class="cr-val" id="sum-scale">—</span>
+        </div>
+        <div class="confirm-sep"></div>
+        <div class="confirm-row">
+          <span class="cr-icon">🛡</span>
+          <span class="cr-key">Safety</span>
+          <span class="cr-val" id="sum-safety">—</span>
+        </div>
+        <div class="confirm-sep"></div>
+        <div class="confirm-row">
+          <span class="cr-icon">👥</span>
+          <span class="cr-key">Affected</span>
+          <span class="cr-val" id="sum-count">—</span>
+        </div>
+        <div class="confirm-sep"></div>
+        <div class="confirm-row">
+          <span class="cr-icon">📍</span>
+          <span class="cr-key">GPS</span>
+          <span class="cr-val" id="sum-gps">Acquiring...</span>
+        </div>
+      </div>
+
+      <div class="autosend-bar" id="autosend-bar">
+        <div class="autosend-count" id="autosend-count">10</div>
+        <div class="autosend-text">Auto-sending in <strong id="autosend-s">10</strong> seconds</div>
+        <button class="autosend-cancel" onclick="cancelAutoSend()">Cancel</button>
+      </div>
+
+      <button class="btn-send" id="send-btn" onclick="sendSOS()">
+        🌊 SEND DISASTER SOS
+      </button>
+      <button class="btn-secondary" onclick="goStep(2)">← Edit Details</button>
+    </div>
+
+    <a href="/" style="text-align:center;font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;">
+      ← Cancel and go home
+    </a>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    let socket;
+    try { socket = io({ reconnectionAttempts: 3 }); } catch(e) {}
+
+    let gpsData = { lat: 18.5204, lon: 73.8567 };
+    let selectedSubtype = null;
+    let selectedScale = null;
+    let selectedSafety = null;
+    let victimCount = 1;
+    let autoSendTimer = null;
+    let autoSendSecs = 10;
+
+    // GPS
+    const sl = sessionStorage.getItem('onclick_lat');
+    if (sl) {
+      gpsData = { lat: parseFloat(sl), lon: parseFloat(sessionStorage.getItem('onclick_lon')) };
+      setGPSText(gpsData.lat, gpsData.lon);
+    } else if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => { gpsData = { lat:pos.coords.latitude, lon:pos.coords.longitude }; sessionStorage.setItem('onclick_lat',gpsData.lat); sessionStorage.setItem('onclick_lon',gpsData.lon); setGPSText(gpsData.lat, gpsData.lon); },
+        () => setGPSText(null, null),
+        { enableHighAccuracy:true, timeout:9000 }
+      );
+    }
+    function setGPSText(lat, lon) {
+      document.getElementById('gps-text').textContent = lat
+        ? `GPS Locked — ${lat.toFixed(5)}, ${lon.toFixed(5)}`
+        : 'GPS unavailable — using approximate';
+      document.getElementById('gps-dot').className = lat ? 'gps-dot' : 'gps-dot error';
+    }
+
+    // Subtypes
+    document.querySelectorAll('.subtype-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.subtype-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedSubtype = btn.dataset.subtype;
+        document.getElementById('subtype-error').classList.remove('show');
+      });
+    });
+
+    function selectScale(btn, val) {
+      document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedScale = val;
+    }
+
+    function selectSafety(btn, val) {
+      const cls = val === 'safe' ? 'sel-safe' : val === 'unsafe' ? 'sel-unsafe' : '';
+      document.querySelectorAll('.safety-btn').forEach(b => { b.className = 'safety-btn'; });
+      if (cls) btn.classList.add(cls); else btn.classList.add('sel-safe');
+      selectedSafety = val;
+    }
+
+    function changeCount(d) {
+      victimCount = Math.max(1, Math.min(999, victimCount + d));
+      document.getElementById('count-val').textContent = victimCount;
+    }
+
+    function goStep(n) {
+      if (n === 2 && !selectedSubtype) { document.getElementById('subtype-error').classList.add('show'); return; }
+      if (n === 3) { populateSummary(); startAutoSend(); } else clearAutoSend();
+
+      document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step-' + n).classList.add('active');
+
+      const titles = ['','What type of<br/>disaster is this?','Describe the situation','Confirm & Send'];
+      const subs   = ['','Tap the type that matches your situation. GPS captured automatically.','Tell us the scale and your safety status.','Review before sending your Disaster SOS.'];
+      document.getElementById('step-title').innerHTML = titles[n];
+      document.getElementById('step-sub').textContent = subs[n];
+
+      ['sdot-1','sdot-2','sdot-3'].forEach((id, i) => {
+        const d = document.getElementById(id);
+        d.classList.remove('active','done');
+        if (i+1 < n)  d.classList.add('done');
+        if (i+1 === n) d.classList.add('active');
+      });
+    }
+
+    function populateSummary() {
+      const sl = { FLOOD:'Flood', EARTHQUAKE:'Earthquake', FIRE:'Fire', COLLAPSE:'Collapse', STORM:'Storm', GAS:'Gas / Chemical' };
+      const sc = { INDIVIDUAL:'Individual', BUILDING:'Building', LOCALITY:'Locality', CITY_WIDE:'City-wide' };
+      const sf = { safe:'Safe', unsafe:'In danger ⚠', reporting:'Reporting for others' };
+      document.getElementById('sum-type').textContent  = sl[selectedSubtype] || selectedSubtype;
+      document.getElementById('sum-scale').textContent = sc[selectedScale] || 'Not specified';
+      document.getElementById('sum-safety').textContent= sf[selectedSafety] || 'Not specified';
+      document.getElementById('sum-count').textContent = `${victimCount} person${victimCount>1?'s':''}`;
+      document.getElementById('sum-gps').textContent   = gpsData.lat ? `${gpsData.lat.toFixed(5)}, ${gpsData.lon.toFixed(5)}` : 'Unavailable';
+    }
+
+    function startAutoSend() {
+      autoSendSecs = 10;
+      document.getElementById('autosend-bar').classList.add('show');
+      updateDisplay();
+      autoSendTimer = setInterval(() => {
+        autoSendSecs--;
+        updateDisplay();
+        if (autoSendSecs <= 0) { clearAutoSend(); sendSOS(); }
+      }, 1000);
+    }
+    function updateDisplay() {
+      document.getElementById('autosend-count').textContent = autoSendSecs;
+      document.getElementById('autosend-s').textContent = autoSendSecs;
+    }
+    function clearAutoSend() { clearInterval(autoSendTimer); autoSendTimer = null; document.getElementById('autosend-bar').classList.remove('show'); }
+    function cancelAutoSend() { clearAutoSend(); }
+
+    function sendSOS() {
+      clearAutoSend();
+      const payload = {
+        type: 'DISASTER', subtype: selectedSubtype,
+        scale: selectedScale || 'UNKNOWN', safety: selectedSafety || 'UNKNOWN',
+        count: victimCount,
+        lat: gpsData.lat, lon: gpsData.lon,
+        notes: (document.getElementById('disaster-notes')||{}).value?.trim()||'',
+        timestamp: new Date().toISOString()
+      };
+      document.getElementById('sending-overlay').classList.add('show');
+      const b = document.getElementById('send-btn'); if (b) b.disabled = true;
+      if (socket) socket.emit('send_sos', payload);
+      setTimeout(() => {
+        window.location.href = `/confirm?type=disaster&subtype=${selectedSubtype.toLowerCase()}&scale=${payload.scale}&safety=${payload.safety}&count=${victimCount}`;
+      }, 1600);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+{
+  "incidents": [
+    {
+      "type": "EMERGENCY",
+      "subtype": "MEDICAL",
+      "lat": 18.73393567231067,
+      "lon": 73.65752122939573,
+      "notes": "",
+      "timestamp": "2026-04-13T19:24:31.660Z",
+      "id": "77DEA5FB",
+      "triage": {
+        "level": "STABLE",
+        "reason": "Medical emergency — cardiac/respiratory assessment needed.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-13T19:24:31.694Z",
+      "status": "ACTIVE"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "MEDICAL",
+      "lat": 18.73393567231067,
+      "lon": 73.65752122939573,
+      "notes": "",
+      "timestamp": "2026-04-13T19:33:53.931Z",
+      "id": "0381C9F3",
+      "triage": {
+        "level": "CRITICAL",
+        "reason": "Medical emergency — cardiac/respiratory assessment needed.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-13T19:33:53.995Z",
+      "status": "ACTIVE"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "UNCONSCIOUS",
+      "lat": 18.7340465,
+      "lon": 73.657753,
+      "notes": "testing mode",
+      "timestamp": "2026-04-13T19:37:08.070Z",
+      "id": "BD076345",
+      "triage": {
+        "level": "CRITICAL",
+        "reason": "Unconscious patient — airway management critical.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-13T19:37:08.071Z",
+      "status": "ACTIVE"
+    },
+    {
+      "type": "DISASTER",
+      "subtype": "FIRE",
+      "lat": 18.5204,
+      "lon": 73.8567,
+      "notes": "1 st floor testing going on",
+      "timestamp": "2026-04-16T12:33:53.986Z",
+      "id": "A044430F",
+      "triage": {
+        "level": "CRITICAL",
+        "reason": "Active fire — immediate evacuation and firefighting required.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-16T12:33:54.033Z",
+      "status": "ACTIVE"
+    }
+  ],
+  "deployments": []
+}

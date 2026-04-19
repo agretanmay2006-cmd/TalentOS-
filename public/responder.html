@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-secondary": "#ffffff",
+            "on-primary": "#ffffff",
+            "secondary-fixed": "#d8e3fb",
+            "primary-fixed": "#d9e2ff",
+            "primary-fixed-dim": "#b0c6ff",
+            "tertiary": "#ba0035",
+            "error-container": "#ffdad6",
+            "tertiary-fixed": "#ffdada",
+            "surface-container-high": "#e6e8ea",
+            "surface": "#f7f9fb",
+            "outline": "#727787",
+            "on-tertiary-container": "#fffbff",
+            "on-secondary-fixed": "#111c2d",
+            "outline-variant": "#c2c6d8",
+            "secondary-container": "#d5e0f8",
+            "on-secondary-container": "#586377",
+            "surface-bright": "#f7f9fb",
+            "error": "#ba1a1a",
+            "background": "#f7f9fb",
+            "on-tertiary-fixed": "#40000c",
+            "on-error-container": "#93000a",
+            "surface-variant": "#e0e3e5",
+            "on-primary-container": "#fefcff",
+            "primary-container": "#006df8",
+            "on-surface-variant": "#424655",
+            "on-primary-fixed-variant": "#00429c",
+            "tertiary-fixed-dim": "#ffb3b6",
+            "on-tertiary": "#ffffff",
+            "surface-container-low": "#f2f4f6",
+            "surface-container": "#eceef0",
+            "on-secondary-fixed-variant": "#3c475a",
+            "inverse-surface": "#2d3133",
+            "inverse-primary": "#b0c6ff",
+            "secondary-fixed-dim": "#bcc7de",
+            "tertiary-container": "#e21e49",
+            "inverse-on-surface": "#eff1f3",
+            "surface-tint": "#0058cb",
+            "surface-container-highest": "#e0e3e5",
+            "on-tertiary-fixed-variant": "#920028",
+            "on-background": "#191c1e",
+            "surface-container-lowest": "#ffffff",
+            "secondary": "#545f73",
+            "on-surface": "#191c1e",
+            "on-error": "#ffffff",
+            "surface-dim": "#d8dadc",
+            "primary": "#0056c6",
+            "on-primary-fixed": "#001945"
+          },
+          fontFamily: {
+            "headline": ["Space Grotesk"],
+            "body": ["Inter"],
+            "label": ["Space Grotesk"]
+          },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .tactical-blur {
+      backdrop-filter: blur(20px);
+      background: rgba(247, 249, 251, 0.85);
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+    <link rel="manifest" href="/manifest.json">
+</head>
+<body class="bg-surface font-body text-on-surface antialiased overflow-hidden h-screen flex flex-col">
+<!-- TopNavBar (Responder Terminal Style) -->
+<header class="w-full bg-slate-900 border-b border-tertiary/30 flex justify-between items-center px-6 py-3 sticky top-0 z-[60]">
+<div class="flex items-center gap-3">
+<span class="font-headline font-black text-white italic tracking-tighter text-lg">RESPONDER TERMINAL</span>
+<div class="flex items-center gap-1.5">
+<span class="bg-tertiary px-2 py-0.5 text-[10px] font-bold text-white rounded-sm">LIVE FEED</span>
+<div class="flex items-center gap-1 bg-primary/20 px-2 py-0.5 rounded-sm border border-primary/30">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="text-[9px] font-bold text-primary-fixed tracking-wider uppercase">Data Mule Active</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+<span class="material-symbols-outlined text-white">grid_view</span>
+<div class="h-8 w-8 bg-surface-container rounded-sm overflow-hidden border border-outline-variant/20">
+<img alt="Officer Avatar" class="w-full h-full object-cover" data-alt="close-up portrait of a professional rescue officer in high-visibility gear against a technical background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuABdnG5uPjXiHmk4nse8ZIJMbRQBwZqonCvnQZeDaosTlvfYEW4GL5nx_ddbzCX0-r5wFJqKXWQ7rXnwfWmhqMsdIoTtvfS6QWL1GLYCCtCxPgP4shNyZPqnyO8_JaN68wCDmP7pz77Nipz98H7H8uYqmVaof5S56evD_JJK2RYESDAlTGUk05SsGE1b27wBCPy0JGBUVuoYhByh-3Q4xTbtebvhRXeUYbRYgHkwGNXN06MjXH1J8F36OBCsIM3j-HPjIRJ_lYQRmFk"/>
+</div>
+</div>
+</header>
+<main class="flex-1 relative flex flex-col overflow-hidden">
+<!-- Map Canvas (HUD Layout) -->
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-surface-container-high/20 pointer-events-none z-10"></div>
+<div id="map" class="w-full h-full grayscale brightness-110 contrast-125 opacity-80 z-0"></div>
+</div>
+<!-- HUD Telemetry (Top Left) -->
+<div class="absolute top-6 left-6 z-20 flex flex-col gap-2">
+<div class="tactical-blur p-4 rounded-sm border-l-4 border-primary shadow-lg">
+<p class="font-label text-[10px] text-on-surface-variant mb-1">ETA TO TARGET</p>
+<p class="font-headline text-3xl font-bold text-primary tracking-tight">04:22</p>
+<div class="mt-2 flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label text-[10px] text-primary font-bold">GPS ACTIVE</span>
+</div>
+<span class="text-[8px] text-on-surface-variant italic">SNIFFING FOR OFFLINE SOS...</span>
+</div>
+</div>
+</div>
+<!-- Mission Critical Panel (Bottom Overlay) -->
+<div class="absolute bottom-20 inset-x-0 z-30 px-4">
+<div class="tactical-blur p-6 rounded-lg border-t-2 border-tertiary shadow-2xl">
+<div class="flex justify-between items-start mb-6">
+<div class="flex flex-col">
+<div class="flex items-center gap-2 mb-1">
+<h2 class="font-headline font-bold text-xl tracking-tight text-on-surface uppercase">Victim Vitals</h2>
+<span class="bg-primary/10 text-primary text-[9px] font-bold px-2 py-0.5 rounded-full border border-primary/20">VITAL TELEMETRY (VIA MESH)</span>
+</div>
+<p class="font-label text-[11px] text-on-surface-variant">INCIDENT ALPHA-7 | ID 9982</p>
+</div>
+<div class="bg-tertiary-fixed px-3 py-1 rounded-sm">
+<span class="font-headline font-bold text-tertiary text-xs">PRIORITY: CRITICAL</span>
+</div>
+</div>
+<!-- Vital Stats Grid (Bento Style) -->
+<div class="grid grid-cols-2 gap-3 mb-8">
+<div class="bg-surface-container-low p-4 rounded-sm flex flex-col">
+<span class="font-label text-[10px] text-on-surface-variant uppercase">Blood Type</span>
+<span id="vital-blood" class="font-headline font-black text-2xl text-on-surface">B+</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-sm flex flex-col border-r-4 border-tertiary">
+<span class="font-label text-[10px] text-on-surface-variant uppercase">Trauma Level</span>
+<span id="vital-trauma" class="font-headline font-black text-2xl text-tertiary uppercase">High-G</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-sm flex flex-col col-span-2 relative">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label text-[10px] text-on-surface-variant uppercase">Heart Rate</span>
+<span id="vital-hr" class="font-headline font-bold text-primary">142 BPM</span>
+</div>
+<div class="h-8 w-full flex items-end gap-[2px]">
+<div class="bg-primary h-2 w-1"></div>
+<div class="bg-primary h-4 w-1"></div>
+<div class="bg-primary h-8 w-1"></div>
+<div class="bg-primary h-3 w-1"></div>
+<div class="bg-primary h-6 w-1"></div>
+<div class="bg-primary h-2 w-1"></div>
+<div class="bg-primary h-5 w-1"></div>
+<div class="bg-primary h-7 w-1"></div>
+<div class="bg-primary h-3 w-1"></div>
+<div class="bg-primary h-4 w-1"></div>
+<div class="bg-primary h-2 w-1"></div>
+<div class="bg-primary h-6 w-1"></div>
+<div class="bg-primary h-8 w-1"></div>
+<div class="bg-primary h-3 w-1"></div>
+<div class="bg-primary h-5 w-1"></div>
+<div class="bg-primary h-7 w-1"></div>
+<div class="bg-primary h-4 w-1"></div>
+<div class="bg-primary h-6 w-1"></div>
+<div class="bg-primary h-2 w-1"></div>
+<div class="bg-primary h-5 w-1"></div>
+<div class="bg-primary h-8 w-1"></div>
+<div class="bg-primary h-3 w-1"></div>
+<div class="bg-primary h-4 w-1"></div>
+</div>
+</div>
+</div>
+<!-- SWIPE TO DISPATCH Slider -->
+<div class="relative bg-surface-container-highest h-16 rounded-full flex items-center px-2 group overflow-hidden border border-outline-variant/30 shadow-inner">
+<div class="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/5 to-transparent"></div>
+<div class="h-12 w-12 bg-primary rounded-full flex items-center justify-center text-white shadow-[0_4px_12px_rgba(0,88,203,0.4)] z-10 translate-x-0 cursor-pointer">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+<span class="flex-1 text-center font-headline font-bold text-xs uppercase tracking-[0.25em] text-primary relative z-0">Swipe to Dispatch</span>
+<div class="absolute right-6 opacity-40 animate-pulse flex">
+<span class="material-symbols-outlined text-primary scale-125">keyboard_double_arrow_right</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center py-3 px-2 bg-white border-t border-slate-200 z-50">
+<a class="flex flex-col items-center justify-center text-blue-700 scale-105" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">emergency</span>
+<span class="font-label text-[11px] font-bold uppercase mt-1">SOS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 opacity-70 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined">location_on</span>
+<span class="font-label text-[11px] font-bold uppercase mt-1">Map</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 opacity-70 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined">medical_services</span>
+<span class="font-label text-[11px] font-bold uppercase mt-1">Resources</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 opacity-70 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label text-[11px] font-bold uppercase mt-1">Profile</span>
+</a>
+</nav>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    // Initialization mapping
+    var map = L.map('map', {zoomControl: false}).setView([18.5204, 73.8567], 13);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '',
+        subdomains: 'abcd',
+        maxZoom: 20
+    }).addTo(map);
+
+    var ambulancePos = [18.5100, 73.8600]; 
+    var ambulanceIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: "<div style='background-color:#0056c6; width:15px; height:15px; border-radius:50%; border:2px solid white; box-shadow: 0 0 10px #0056c6;'></div>",
+        iconSize: [15, 15]
+    });
+    var markerAmbulance = L.marker(ambulancePos, {icon: ambulanceIcon}).addTo(map);
+
+    var routingControl = null;
+    const socket = io();
+
+    if ("geolocation" in navigator) {
+        navigator.geolocation.watchPosition(function(position) {
+            ambulancePos = [position.coords.latitude, position.coords.longitude];
+            markerAmbulance.setLatLng(ambulancePos);
+            socket.emit('responder_gps', { lat: ambulancePos[0], lon: ambulancePos[1] });
+            if (routingControl) {
+                routingControl.spliceWaypoints(0, 1, L.latLng(ambulancePos[0], ambulancePos[1]));
+            }
+        }, function(error) {
+            console.error("GPS Telemetry Lost:", error);
+        }, { enableHighAccuracy: true });
+    }
+
+    socket.on('dispatch_assignment', function(data) {
+        if(data && data.gps) {
+            if(data.vitals) {
+                if(data.vitals.blood) document.getElementById('vital-blood').innerText = data.vitals.blood;
+                if(data.vitals.trauma) document.getElementById('vital-trauma').innerText = data.vitals.trauma;
+                if(data.vitals.hr) document.getElementById('vital-hr').innerText = data.vitals.hr;
+            } else if (data.text) {
+                document.getElementById('vital-trauma').innerText = 'EVAL';
+            }
+
+            var victimPos = [data.gps.lat, data.gps.lon || data.gps.lng];
+            
+            if(routingControl) map.removeControl(routingControl);
+
+            routingControl = L.Routing.control({
+                waypoints: [
+                    L.latLng(ambulancePos[0], ambulancePos[1]),
+                    L.latLng(victimPos[0], victimPos[1])
+                ],
+                show: false,
+                addWaypoints: false,
+                routeWhileDragging: false,
+                fitSelectedRoutes: true,
+                lineOptions: {
+                    styles: [{color: '#0056c6', opacity: 0.9, weight: 5, className: 'animate-pulse'}]
+                },
+                createMarker: function(i, wp, nWps) {
+                    if (i === 1) { 
+                        var sosIcon = L.divIcon({
+                            className: 'custom-div-icon',
+                            html: "<div style='background-color:#ba0035; width:15px; height:15px; border-radius:50%; border:2px solid white; box-shadow: 0 0 10px #ba0035;'></div>",
+                            iconSize: [15, 15]
+                        });
+                        return L.marker(wp.latLng, {icon: sosIcon});
+                    } else {
+                        return L.marker(wp.latLng, {icon: ambulanceIcon});
+                    }
+                }
+            }).addTo(map);
+            
+            map.fitBounds([
+                [ambulancePos[0], ambulancePos[1]],
+                [victimPos[0], victimPos[1]]
+            ], {padding: [50, 50]});
+        }
+    });
+
+</script>
+<script>
+  if("serviceWorker" in navigator){
+    window.addEventListener("load",()=>{
+      navigator.serviceWorker.register("/sw.js").catch(e=>console.error("SW Error",e));
+    });
+  }
+</script>
+</body></html>

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HOSPITAL RESOURCE PORTAL | RESPONDER TERMINAL</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#d8e3fb",
+                        "primary-fixed": "#d9e2ff",
+                        "primary-fixed-dim": "#b0c6ff",
+                        "tertiary": "#ba0035",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#ffdada",
+                        "surface-container-high": "#e6e8ea",
+                        "surface": "#f7f9fb",
+                        "outline": "#727787",
+                        "on-tertiary-container": "#fffbff",
+                        "on-secondary-fixed": "#111c2d",
+                        "outline-variant": "#c2c6d8",
+                        "secondary-container": "#d5e0f8",
+                        "on-secondary-container": "#586377",
+                        "surface-bright": "#f7f9fb",
+                        "error": "#ba1a1a",
+                        "background": "#f7f9fb",
+                        "on-tertiary-fixed": "#40000c",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-container": "#fefcff",
+                        "primary-container": "#006df8",
+                        "on-surface-variant": "#424655",
+                        "on-primary-fixed-variant": "#00429c",
+                        "tertiary-fixed-dim": "#ffb3b6",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-container": "#eceef0",
+                        "on-secondary-fixed-variant": "#3c475a",
+                        "inverse-surface": "#2d3133",
+                        "inverse-primary": "#b0c6ff",
+                        "secondary-fixed-dim": "#bcc7de",
+                        "tertiary-container": "#e21e49",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-tint": "#0058cb",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-tertiary-fixed-variant": "#920028",
+                        "on-background": "#191c1e",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#545f73",
+                        "on-surface": "#191c1e",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#d8dadc",
+                        "primary": "#0070FF",
+                        "on-primary-fixed": "#001945"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Space Grotesk"]
+                    },
+                    borderRadius: {"DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4, .font-space { font-family: 'Space Grotesk', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .telemetry-pulse { animation: pulse-opacity 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse-opacity {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .7; }
+        }
+    </style>
+    <link rel="manifest" href="/manifest.json">
+</head>
+<body class="bg-surface text-on-surface flex overflow-hidden h-screen">
+<!-- SideNavBar (Authority: JSON Component 3) -->
+<aside class="h-screen w-64 border-r border-slate-200 bg-slate-100 flex flex-col py-8 px-4 font-['Space_Grotesk'] font-medium">
+<div class="mb-10 px-2">
+<h2 class="text-lg font-black tracking-widest text-slate-900 uppercase">UNIFIED COMMAND</h2>
+<p class="text-[10px] text-primary font-bold tracking-tighter opacity-70">Incident Alpha-7</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-3 bg-white text-primary font-bold border-l-4 border-primary transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-primary">dashboard</span>
+<span class="text-sm">Operations</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 text-slate-600 hover:bg-slate-200 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-sm">Logistics</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 text-slate-600 hover:bg-slate-200 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">local_hospital</span>
+<span class="text-sm">Medical</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 text-slate-600 hover:bg-slate-200 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="text-sm">Fleet</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 text-slate-600 hover:bg-slate-200 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="text-sm">Personnel</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 text-slate-600 hover:bg-slate-200 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm">Settings</span>
+</a>
+</nav>
+<button class="mt-auto bg-primary text-white py-4 px-4 text-xs font-bold tracking-widest hover:brightness-110 transition-all">
+        INITIATE BROADCAST
+    </button>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 flex flex-col min-w-0 bg-surface-container-lowest">
+<!-- TopNavBar (Authority: JSON Component 4 & 1 Hybrid) -->
+<header class="flex justify-between items-center w-full px-8 py-3 bg-slate-900 border-b border-red-900/30 uppercase font-['Space_Grotesk'] sticky top-0 z-10">
+<div class="flex items-center gap-6">
+<span class="font-black text-white italic tracking-tighter text-xl">RESPONDER TERMINAL</span>
+<div class="h-6 w-[1px] bg-white/10 hidden md:block"></div>
+<nav class="hidden md:flex gap-8 text-[11px] font-bold tracking-widest text-slate-400">
+<a class="hover:text-primary transition-colors" href="/dashboard">MAPS</a>
+<a class="text-white" href="/resource">RESOURCES</a>
+<a class="hover:text-primary transition-colors" href="/responder">RESPONDER</a>
+<a class="hover:text-primary transition-colors" href="/">SOS</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group hidden lg:block">
+<input class="bg-white/5 border-none text-[10px] text-white py-2 pl-4 pr-10 w-64 focus:ring-1 focus:ring-primary rounded-none" placeholder="SEARCH REGISTRY..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">search</span>
+</div>
+<div class="flex gap-4 text-white">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary">notifications_active</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary">grid_view</span>
+</div>
+<button class="bg-primary hover:bg-primary-container text-white px-6 py-2 text-[10px] font-black tracking-[0.2em] transition-all">
+                DEPLOY
+            </button>
+</div>
+</header>
+<!-- Content Area -->
+<div class="flex-1 overflow-y-auto no-scrollbar p-8">
+<div class="max-w-7xl mx-auto space-y-8">
+<!-- Pre-Alert Panel -->
+<div class="bg-tertiary-container/10 border border-tertiary/20 p-4 flex flex-wrap md:flex-nowrap items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="bg-tertiary p-2 text-white animate-pulse">
+<span class="material-symbols-outlined text-lg">warning</span>
+</div>
+<div>
+<p class="text-[10px] font-bold text-tertiary uppercase tracking-widest font-headline">Pre-Alert: Patient Incoming</p>
+<p class="text-sm font-bold text-on-surface font-headline uppercase">Multiple Trauma - Sector B4 Arrival</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right">
+<p class="text-[9px] font-bold text-outline uppercase">Est. Arrival</p>
+<p class="text-xl font-bold font-headline text-tertiary tabular-nums">02:44<span class="text-[10px] ml-1">MIN</span></p>
+</div>
+<button class="bg-tertiary text-white px-6 py-2 text-[10px] font-bold tracking-widest hover:bg-tertiary/90">PREPARE BAY 4</button>
+</div>
+</div>
+<!-- Section Header -->
+<div class="flex justify-between items-end">
+<div>
+<span class="text-[11px] font-bold text-primary uppercase tracking-widest font-headline">Telemetry Overview</span>
+<h1 class="text-4xl font-bold text-on-surface tracking-tight font-headline">HOSPITAL RESOURCE PORTAL</h1>
+</div>
+<div class="flex gap-4 items-center">
+<div class="text-right">
+<p class="text-[10px] font-bold text-outline uppercase">Active Sessions</p>
+<p class="text-lg font-bold font-headline" id="active-sessions">--</p>
+</div>
+<div class="w-[1px] h-10 bg-outline-variant opacity-20"></div>
+<div class="text-right">
+<p class="text-[10px] font-bold text-outline uppercase">Uptime</p>
+<p class="text-lg font-bold font-headline text-primary">99.9%</p>
+</div>
+</div>
+</div>
+<!-- Resource Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- ICU Beds Card -->
+<div class="bg-surface-container-low p-6 flex flex-col relative border border-outline-variant/10">
+<div class="absolute top-0 left-0 w-[2px] h-full bg-primary"></div>
+<div class="flex justify-between items-start mb-6">
+<span class="material-symbols-outlined text-primary">bed</span>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-green-500 rounded-full telemetry-pulse"></span>
+<span class="text-[8px] font-black text-outline uppercase tracking-tighter">Live Inventory</span>
+</div>
+</div>
+<h3 class="text-xs font-bold text-outline uppercase tracking-widest font-headline">ICU Beds</h3>
+<p class="text-3xl font-bold font-headline mt-1 tabular-nums"><span id="icu-beds-count" class="transition-all duration-500 inline-block">42</span><span class="text-sm font-medium text-outline ml-2">/ 50</span></p>
+<div class="mt-6">
+<div class="w-full bg-surface-container-high h-1 overflow-hidden">
+<div class="bg-primary h-full w-[84%] transition-all duration-1000"></div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] font-bold text-outline">
+<span class="flex items-center gap-1">84% CAPACITY <span class="material-symbols-outlined text-[10px] telemetry-pulse">sensors</span></span>
+<span class="text-tertiary">CRITICAL</span>
+</div>
+</div>
+</div>
+<!-- Oxygen Level Card -->
+<div class="bg-surface-container-low p-6 flex flex-col relative border border-outline-variant/10">
+<div class="absolute top-0 left-0 w-[2px] h-full bg-primary"></div>
+<div class="flex justify-between items-start mb-6">
+<span class="material-symbols-outlined text-primary">air</span>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-green-500 rounded-full telemetry-pulse"></span>
+<span class="text-[8px] font-black text-outline uppercase tracking-tighter">Live Inventory</span>
+</div>
+</div>
+<h3 class="text-xs font-bold text-outline uppercase tracking-widest font-headline">Oxygen Supply</h3>
+<p class="text-3xl font-bold font-headline mt-1 tabular-nums">2.4k<span class="text-sm font-medium text-outline ml-2">Ltrs</span></p>
+<div class="mt-6">
+<div class="w-full bg-surface-container-high h-1 overflow-hidden">
+<div class="bg-primary h-full w-[65%] transition-all duration-1000"></div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] font-bold text-outline">
+<span class="flex items-center gap-1">65% RESERVES <span class="material-symbols-outlined text-[10px] telemetry-pulse">sensors</span></span>
+<span class="text-primary">STABLE</span>
+</div>
+</div>
+</div>
+<!-- Blood Bank Card -->
+<div class="bg-surface-container-low p-6 flex flex-col relative border border-outline-variant/10">
+<div class="absolute top-0 left-0 w-[2px] h-full bg-tertiary"></div>
+<div class="flex justify-between items-start mb-6">
+<span class="material-symbols-outlined text-tertiary">bloodtype</span>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-green-500 rounded-full telemetry-pulse"></span>
+<span class="text-[8px] font-black text-outline uppercase tracking-tighter">Live Inventory</span>
+</div>
+</div>
+<h3 class="text-xs font-bold text-outline uppercase tracking-widest font-headline">Blood Bank (O-)</h3>
+<p class="text-3xl font-bold font-headline mt-1 tabular-nums">08<span class="text-sm font-medium text-outline ml-2">Units</span></p>
+<div class="mt-6">
+<div class="w-full bg-surface-container-high h-1 overflow-hidden">
+<div class="bg-tertiary h-full w-[15%] transition-all duration-1000"></div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] font-bold text-outline">
+<span class="flex items-center gap-1">15% STOCK <span class="material-symbols-outlined text-[10px] telemetry-pulse">sensors</span></span>
+<span class="text-tertiary">DEPLETED</span>
+</div>
+</div>
+</div>
+<!-- Surgeons Card -->
+<div class="bg-surface-container-low p-6 flex flex-col relative border border-outline-variant/10">
+<div class="absolute top-0 left-0 w-[2px] h-full bg-primary"></div>
+<div class="flex justify-between items-start mb-6">
+<span class="material-symbols-outlined text-primary">medical_services</span>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-green-500 rounded-full telemetry-pulse"></span>
+<span class="text-[8px] font-black text-outline uppercase tracking-tighter">Live Inventory</span>
+</div>
+</div>
+<h3 class="text-xs font-bold text-outline uppercase tracking-widest font-headline">Active Surgeons</h3>
+<p class="text-3xl font-bold font-headline mt-1 tabular-nums">12<span class="text-sm font-medium text-outline ml-2">/ 18</span></p>
+<div class="mt-6">
+<div class="w-full bg-surface-container-high h-1 overflow-hidden">
+<div class="bg-primary h-full w-[66%] transition-all duration-1000"></div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] font-bold text-outline">
+<span class="flex items-center gap-1">66% ENGAGED <span class="material-symbols-outlined text-[10px] telemetry-pulse">sensors</span></span>
+<span class="text-primary">NOMINAL</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Layout Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-12">
+<!-- Dashboard Visualizations -->
+<div class="lg:col-span-2 space-y-8">
+<div class="bg-surface-container p-0.5">
+<div class="bg-white p-6">
+<div class="flex justify-between items-center mb-8">
+<div class="flex items-center gap-2">
+<h4 class="font-bold font-headline uppercase tracking-tight">Deployment Density</h4>
+<span class="px-2 py-0.5 bg-slate-100 text-[8px] font-black tracking-widest text-outline">REAL-TIME DATA</span>
+</div>
+<div class="flex gap-4">
+<button class="text-[10px] font-bold text-primary">WEEKLY</button>
+<button class="text-[10px] font-bold text-outline">MONTHLY</button>
+</div>
+</div>
+<div class="h-64 flex items-end justify-between gap-2 px-2">
+<div class="w-full bg-surface-container-low group relative h-[40%] hover:bg-primary transition-all duration-700"></div>
+<div class="w-full bg-surface-container-low group relative h-[65%] hover:bg-primary transition-all duration-700"></div>
+<div class="w-full bg-surface-container-low group relative h-[50%] hover:bg-primary transition-all duration-700"></div>
+<div class="w-full bg-surface-container-low group relative h-[85%] hover:bg-primary transition-all duration-700"></div>
+<div class="w-full bg-surface-container-low group relative h-[30%] hover:bg-primary transition-all duration-700"></div>
+<div class="w-full bg-surface-container-low group relative h-[70%] hover:bg-primary transition-all duration-700"></div>
+<div class="w-full bg-surface-container-low group relative h-[95%] bg-tertiary transition-all duration-700 telemetry-pulse"></div>
+<div class="w-full bg-surface-container-low group relative h-[45%] hover:bg-primary transition-all duration-700"></div>
+<div class="w-full bg-surface-container-low group relative h-[60%] hover:bg-primary transition-all duration-700"></div>
+<div class="w-full bg-surface-container-low group relative h-[25%] hover:bg-primary transition-all duration-700"></div>
+<div class="w-full bg-surface-container-low group relative h-[55%] hover:bg-primary transition-all duration-700"></div>
+<div class="w-full bg-surface-container-low group relative h-[80%] hover:bg-primary transition-all duration-700"></div>
+</div>
+<div class="flex justify-between mt-4 text-[10px] font-bold text-outline px-2 uppercase tracking-widest">
+<span>00:00</span>
+<span>06:00</span>
+<span>12:00</span>
+<span>18:00</span>
+<span>23:59</span>
+</div>
+</div>
+</div>
+<!-- Map Integration -->
+<div class="relative h-80 bg-surface-container-high overflow-hidden border border-outline-variant/10">
+<img alt="Digital tactical map" class="w-full h-full object-cover opacity-60 grayscale brightness-125" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDERFDyr7X7f57uqRI_xHjK8BfYdi8k0SMVHuUN6YzbpJyQqdKCoYIbt8Oma-oNBLqBE6knYKwVrhJMG3y7WGg3UXDaoPZfPGZCaCBQUF0aSvHhryDDYNbK8QfxyvVAPK7eOLir3Unptrs5AOsem5jFfFBk2nWAqeGTWEwpr-3RF7s_h6Tnkh-rSm4RAoUp_JRHDzMY5P65oDPRm0pclfuG5nNK8DsQ8S1fPyqYRikGqyuYpjwoK-ilQ9kwni5Clb7Uc1yDWSIZ0ZTK"/>
+<div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-4 py-2 border-l-4 border-primary">
+<p class="text-[10px] font-bold text-outline uppercase font-headline">Live Location</p>
+<p class="text-sm font-bold font-headline">DISTRICT ALPHA UNIT FEED</p>
+</div>
+</div>
+</div>
+<!-- Sidebar Feed -->
+<div class="lg:col-span-1 space-y-6">
+<div class="flex justify-between items-center px-2">
+<h4 class="font-bold font-headline uppercase tracking-tight flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+                            Incoming Feed
+                        </h4>
+<span class="text-[10px] font-bold text-outline uppercase">6 Active Transit</span>
+</div>
+<div class="space-y-4">
+<!-- Feed Items -->
+<div class="bg-surface-container-low p-4 flex gap-4 border-l-2 border-primary">
+<div class="w-10 h-10 bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">emergency</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<p class="text-[11px] font-black font-headline tracking-tighter">UNIT-7421 (ETA 4M)</p>
+<span class="text-[9px] font-bold text-tertiary uppercase">Trauma</span>
+</div>
+<p class="text-xs text-outline mt-1 font-body leading-tight">Patient Male, 45y, Cardiac Arrest. Protocol Alpha-1 engaged.</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 flex gap-4 border-l-2 border-slate-300 opacity-60">
+<div class="w-10 h-10 bg-surface-container flex items-center justify-center text-slate-400">
+<span class="material-symbols-outlined">emergency</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<p class="text-[11px] font-black font-headline tracking-tighter">UNIT-8812 (ETA 12M)</p>
+<span class="text-[9px] font-bold text-primary uppercase">Routine</span>
+</div>
+<p class="text-xs text-outline mt-1 font-body leading-tight">Non-critical transport. Inter-hospital transfer.</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 flex gap-4 border-l-2 border-primary">
+<div class="w-10 h-10 bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">emergency</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<p class="text-[11px] font-black font-headline tracking-tighter">UNIT-3304 (ETA 14M)</p>
+<span class="text-[9px] font-bold text-tertiary uppercase">Critical</span>
+</div>
+<p class="text-xs text-outline mt-1 font-body leading-tight">Multi-trauma. Surgical theatre standby required.</p>
+</div>
+</div>
+</div>
+<button class="w-full py-3 border border-outline-variant text-[10px] font-bold tracking-[0.2em] text-outline hover:bg-surface-container-high transition-colors">
+                        VIEW ALL ACTIVITY
+                    </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<footer class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center py-3 px-2 bg-white border-t border-slate-200 z-50 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] font-['Space_Grotesk'] text-[11px] font-bold uppercase">
+<div class="flex flex-col items-center justify-center text-primary scale-105">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">emergency</span>
+<span>SOS</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 opacity-70">
+<span class="material-symbols-outlined">location_on</span>
+<span>Map</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 opacity-70">
+<span class="material-symbols-outlined">medical_services</span>
+<span>Resources</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 opacity-70">
+<span class="material-symbols-outlined">person</span>
+<span>Profile</span>
+</div>
+</footer>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    socket.on('update_hospital_capacity', function(data) {
+        const icuBeds = document.getElementById('icu-beds-count');
+        if(icuBeds) {
+            let currentVal = parseInt(icuBeds.innerText);
+            
+            if (data && typeof data.beds !== 'undefined') {
+                icuBeds.innerText = data.beds;
+            } else if (!isNaN(currentVal) && currentVal > 0) {
+                // Default to decrementing by 1 if no specific bed count is passed
+                icuBeds.innerText = currentVal - 1;
+            }
+
+            // Visual feedback ring/color change to indicate a live update
+            icuBeds.classList.add("text-tertiary", "scale-125");
+            setTimeout(() => {
+                icuBeds.classList.remove("text-tertiary", "scale-125");
+            }, 2000);
+        }
+    });
+
+    // Hydrate dynamic data api on startup
+    fetch('/api/incidents').then(r=>r.json()).then(data => {
+        if(data && data.incidents) {
+            let el = document.getElementById('active-sessions');
+            if (el) el.innerText = data.incidents.length;
+        }
+    }).catch(err => console.error(err));
+</script>
+<script>
+  if("serviceWorker" in navigator){
+    window.addEventListener("load",()=>{
+      navigator.serviceWorker.register("/sw.js").catch(e=>console.error("SW Error",e));
+    });
+  }
+</script>
+</body></html>
