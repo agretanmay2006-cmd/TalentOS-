@@ -1,4 +1,4 @@
-const CACHE_NAME = 'onclick-cache-v1';
+const CACHE_NAME = 'onclick-cache-v2';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -9,13 +9,12 @@ const ASSETS_TO_CACHE = [
   '/responder.html',
   '/resource.html',
   '/style.css',
-  '/disaster.css',
-  '/emergency.css',
-  'https://cdn.tailwindcss.com?plugins=forms,container-queries',
+  '/lib/leaflet/leaflet.css',
+  '/lib/leaflet/leaflet.js',
+  '/lib/leaflet-routing-machine/leaflet-routing-machine.css',
+  '/lib/leaflet-routing-machine/leaflet-routing-machine.js',
   'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap',
-  'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
+  'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap'
 ];
 
 // Install Event: Cache Critical Assets

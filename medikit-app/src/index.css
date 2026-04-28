@@ -1,0 +1,36 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+@theme {
+  --font-sans: 'Nunito', 'Poppins', sans-serif;
+  --color-primary: #2D9CDB;
+  --color-accent: #F2994A;
+  --color-danger: #EB5757;
+  --color-background: #F8FAFF;
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06);
+  --radius-card: 16px;
+}
+
+@keyframes sosPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(235,87,87,0.7); }
+  50% { box-shadow: 0 0 0 20px rgba(235,87,87,0); }
+}
+
+@keyframes sosRing {
+  0% { transform: scale(1); opacity:1; }
+  100% { transform: scale(2.5); opacity:0; }
+}
+
+.animate-sos-pulse {
+  animation: sosPulse 2s infinite;
+}
+
+.animate-sos-ring {
+  animation: sosRing 2s infinite cubic-bezier(0.0, 0.0, 0.2, 1);
+}
+
+body {
+  background-color: var(--color-background);
+  font-family: var(--font-sans);
+  color: #333;
+}

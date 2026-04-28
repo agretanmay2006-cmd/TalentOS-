@@ -63,7 +63,949 @@
       },
       "receivedAt": "2026-04-16T12:33:54.033Z",
       "status": "ACTIVE"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "ACCIDENT",
+      "severity": "URGENT",
+      "mobility": "CANNOT_MOVE",
+      "count": 2,
+      "lat": 18.733950109004553,
+      "lon": 73.65751454137227,
+      "notes": "",
+      "timestamp": "2026-04-20T15:02:22.536Z",
+      "id": "2063BA35",
+      "triage": {
+        "level": "URGENT",
+        "reason": "Road accident — trauma team on standby.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-20T15:02:22.676Z",
+      "status": "ACTIVE"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "UNCONSCIOUS",
+      "severity": "URGENT",
+      "mobility": "TRAPPED",
+      "count": 2,
+      "lat": 18.7340465,
+      "lon": 73.657753,
+      "notes": "testing SOS",
+      "timestamp": "2026-04-20T15:34:09.700Z",
+      "id": "7BEE1021",
+      "triage": {
+        "level": "CRITICAL",
+        "reason": "Unconscious patient — airway management critical.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-20T15:34:09.767Z",
+      "status": "ACTIVE"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "ACCIDENT",
+      "severity": "UNKNOWN",
+      "mobility": "TRAPPED",
+      "count": 1,
+      "lat": 18.733950109004553,
+      "lon": 73.65751454137227,
+      "notes": "",
+      "timestamp": "2026-04-20T16:14:19.651Z",
+      "id": "A37D68E1",
+      "triage": {
+        "level": "URGENT",
+        "reason": "Road accident — trauma team on standby.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-20T16:14:19.654Z",
+      "status": "DEPLOYED",
+      "vitals": {
+        "bp_sys": 200,
+        "bp_dia": null,
+        "heart_rate": 98,
+        "spo2": 96,
+        "resp_rate": 12,
+        "temperature": 99.9,
+        "consciousness": null,
+        "bleeding": "Moderate",
+        "skin_color": "Cyanotic",
+        "pain_level": 6,
+        "pupils": "Unequal",
+        "responder_notes": null,
+        "recordedAt": "2026-04-22T18:24:14.511Z"
+      }
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "UNCONSCIOUS",
+      "severity": "UNKNOWN",
+      "mobility": "TRAPPED",
+      "count": 3,
+      "lat": 18.7340465,
+      "lon": 73.657753,
+      "notes": "",
+      "timestamp": "2026-04-20T16:46:39.222Z",
+      "id": "F82176BA",
+      "triage": {
+        "level": "CRITICAL",
+        "reason": "Unconscious patient — airway management critical.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-20T16:46:39.226Z",
+      "status": "DEPLOYED"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "UNCONSCIOUS",
+      "severity": "UNKNOWN",
+      "mobility": "UNKNOWN",
+      "count": 1,
+      "lat": 18.5204,
+      "lon": 73.8567,
+      "notes": "",
+      "timestamp": "2026-04-20T16:49:02.118Z",
+      "id": "C89D9290",
+      "triage": {
+        "level": "CRITICAL",
+        "reason": "Unconscious patient — airway management critical.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-20T16:49:02.119Z",
+      "status": "DEPLOYED"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "MEDICAL",
+      "severity": "CRITICAL",
+      "mobility": "CANNOT_MOVE",
+      "count": 5,
+      "lat": 18.7340465,
+      "lon": 73.657753,
+      "notes": "testing one",
+      "timestamp": "2026-04-20T16:50:53.455Z",
+      "id": "3AE4DE7B",
+      "triage": {
+        "level": "CRITICAL",
+        "reason": "Medical emergency — cardiac/respiratory assessment needed.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-20T16:50:53.457Z",
+      "status": "DEPLOYED"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "UNCONSCIOUS",
+      "severity": "CRITICAL",
+      "mobility": "CANNOT_MOVE",
+      "count": 1,
+      "lat": 18.73393567231067,
+      "lon": 73.65752122939573,
+      "notes": "",
+      "timestamp": "2026-04-20T17:28:50.634Z",
+      "id": "ED0D96F9",
+      "triage": {
+        "level": "CRITICAL",
+        "reason": "Unconscious patient — airway management critical.",
+        "requiredBed": "ICU",
+        "requiredDoctor": "Neurologist",
+        "firstAid": "Check breathing. If breathing, place in recovery position. If not, start CPR.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-20T17:28:50.713Z",
+      "status": "ACTIVE"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "ACCIDENT",
+      "severity": "UNKNOWN",
+      "mobility": "CAN_MOVE",
+      "count": 2,
+      "lat": 18.73393567231067,
+      "lon": 73.65752122939573,
+      "notes": "",
+      "timestamp": "2026-04-20T17:53:35.008Z",
+      "id": "9E32B4E1",
+      "triage": {
+        "level": "URGENT",
+        "reason": "Road accident — trauma team on standby.",
+        "requiredBed": "ICU",
+        "requiredDoctor": "Trauma",
+        "firstAid": "Do not move the victim unless in immediate danger. Support head and neck.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-20T17:53:35.016Z",
+      "status": "DEPLOYED"
+    },
+    {
+      "lat": 18.5204,
+      "lon": 73.8567,
+      "type": "EMERGENCY",
+      "subtype": "UNCONSCIOUS",
+      "notes": "patient is barely breathing",
+      "id": "E44FC4B4",
+      "triage": {
+        "level": "CRITICAL",
+        "reason": "Unconscious patient — airway management critical.",
+        "requiredBed": "ICU",
+        "requiredDoctor": "Neurologist",
+        "firstAid": "Check breathing. If breathing, place in recovery position. If not, start CPR.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-20T17:54:38.701Z",
+      "status": "DEPLOYED"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "ACCIDENT",
+      "severity": "URGENT",
+      "mobility": "TRAPPED",
+      "count": 2,
+      "lat": 18.73393567231067,
+      "lon": 73.65752122939573,
+      "notes": "",
+      "timestamp": "2026-04-20T18:02:06.996Z",
+      "id": "D5C54106",
+      "triage": {
+        "level": "URGENT",
+        "reason": "Road accident — trauma team on standby.",
+        "requiredBed": "ICU",
+        "requiredDoctor": "Trauma",
+        "firstAid": "Do not move the victim unless in immediate danger. Support head and neck.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-20T18:02:07.089Z",
+      "status": "DEPLOYED"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "ACCIDENT",
+      "severity": "STABLE",
+      "mobility": "CAN_MOVE",
+      "count": 2,
+      "lat": 18.73393567231067,
+      "lon": 73.65752122939573,
+      "notes": "",
+      "timestamp": "2026-04-21T16:15:05.449Z",
+      "id": "74A8A196",
+      "triage": {
+        "level": "URGENT",
+        "reason": "Road accident — trauma team on standby.",
+        "requiredBed": "ICU",
+        "requiredDoctor": "Trauma",
+        "firstAid": "Do not move the victim unless in immediate danger. Support head and neck.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-21T16:15:05.508Z",
+      "status": "ACTIVE"
+    },
+    {
+      "type": "DISASTER",
+      "subtype": "EARTHQUAKE",
+      "scale": "CITY_WIDE",
+      "safety": "unsafe",
+      "count": 7,
+      "lat": 18.73393567231067,
+      "lon": 73.65752122939573,
+      "notes": "",
+      "timestamp": "2026-04-21T16:23:39.748Z",
+      "id": "ABA0B259",
+      "triage": {
+        "level": "CRITICAL",
+        "reason": "Seismic event — structural collapse risk, search & rescue priority.",
+        "requiredBed": "Emergency",
+        "requiredDoctor": "Trauma",
+        "firstAid": "Drop, cover, and hold on. Beware of aftershocks.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-21T16:23:39.752Z",
+      "status": "ACTIVE"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "PREGNANCY",
+      "severity": "URGENT",
+      "mobility": "TRAPPED",
+      "count": 2,
+      "lat": 18.73393567231067,
+      "lon": 73.65752122939573,
+      "notes": "",
+      "timestamp": "2026-04-21T16:27:50.287Z",
+      "id": "AADE442C",
+      "triage": {
+        "level": "CRITICAL",
+        "reason": "Obstetric emergency — OB/GYN team on alert.",
+        "requiredBed": "Emergency",
+        "requiredDoctor": "Emergency Specialist",
+        "firstAid": "Have patient lie on their left side. Keep them warm and calm.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-21T16:27:50.290Z",
+      "status": "ACTIVE"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "ACCIDENT",
+      "severity": "URGENT",
+      "mobility": "TRAPPED",
+      "count": 2,
+      "lat": 18.733950109004553,
+      "lon": 73.65751454137227,
+      "notes": "",
+      "timestamp": "2026-04-21T16:31:38.043Z",
+      "id": "96A1858A",
+      "triage": {
+        "level": "URGENT",
+        "reason": "Road accident — trauma team on standby.",
+        "requiredBed": "ICU",
+        "requiredDoctor": "Trauma",
+        "firstAid": "Do not move the victim unless in immediate danger. Support head and neck.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-21T16:31:38.046Z",
+      "status": "ACTIVE"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "UNCONSCIOUS",
+      "severity": "CRITICAL",
+      "mobility": "CANNOT_MOVE",
+      "count": 11,
+      "lat": 18.729272,
+      "lon": 73.664035,
+      "notes": "",
+      "timestamp": "2026-04-22T04:09:55.531Z",
+      "id": "E2D1B8B4",
+      "triage": {
+        "level": "CRITICAL",
+        "reason": "Unconscious patient — airway management critical.",
+        "requiredBed": "ICU",
+        "requiredDoctor": "Neurologist",
+        "firstAid": "Check breathing. If breathing, place in recovery position. If not, start CPR.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-22T04:09:55.569Z",
+      "status": "ACTIVE"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "PREGNANCY",
+      "severity": "STABLE",
+      "mobility": "TRAPPED",
+      "count": 1,
+      "lat": 18.729272,
+      "lon": 73.664035,
+      "notes": "test",
+      "timestamp": "2026-04-22T04:10:41.476Z",
+      "id": "B98D4C5F",
+      "triage": {
+        "level": "CRITICAL",
+        "reason": "Obstetric emergency — OB/GYN team on alert.",
+        "requiredBed": "Emergency",
+        "requiredDoctor": "Emergency Specialist",
+        "firstAid": "Have patient lie on their left side. Keep them warm and calm.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-22T04:10:41.479Z",
+      "status": "DEPLOYED"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "TRAPPED",
+      "severity": "UNKNOWN",
+      "mobility": "UNKNOWN",
+      "count": 2,
+      "lat": 18.729272,
+      "lon": 73.664035,
+      "notes": "",
+      "timestamp": "2026-04-22T04:15:42.278Z",
+      "id": "6B007716",
+      "triage": {
+        "level": "CRITICAL",
+        "reason": "Person trapped — search & rescue team deployment.",
+        "requiredBed": "Emergency",
+        "requiredDoctor": "Trauma",
+        "firstAid": "Keep calm and conserve energy. Knock on pipes or walls periodically.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-22T04:15:42.279Z",
+      "status": "DEPLOYED"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "ACCIDENT",
+      "severity": "URGENT",
+      "mobility": "TRAPPED",
+      "count": 1,
+      "lat": 18.73393567231067,
+      "lon": 73.65752122939573,
+      "notes": "",
+      "timestamp": "2026-04-22T18:19:29.629Z",
+      "id": "437DFE5C",
+      "triage": {
+        "level": "URGENT",
+        "reason": "Road accident — trauma team on standby.",
+        "requiredBed": "ICU",
+        "requiredDoctor": "Trauma",
+        "firstAid": "Do not move the victim unless in immediate danger. Support head and neck.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-22T18:19:30.277Z",
+      "status": "ACTIVE"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "ACCIDENT",
+      "severity": "URGENT",
+      "mobility": "CAN_MOVE",
+      "count": 3,
+      "lat": 18.7340465,
+      "lon": 73.657753,
+      "notes": "",
+      "bloodType": null,
+      "emergencyContact": {
+        "name": "TTTTT",
+        "phone": "2020202020"
+      },
+      "timestamp": "2026-04-22T18:22:55.820Z",
+      "id": "30DCC857",
+      "triage": {
+        "level": "URGENT",
+        "reason": "Road accident — trauma team on standby.",
+        "requiredBed": "ICU",
+        "requiredDoctor": "Trauma",
+        "firstAid": "Do not move the victim unless in immediate danger. Support head and neck.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-22T18:22:55.823Z",
+      "status": "DEPLOYED",
+      "timeline.dispatched": "2026-04-22T18:23:00.904Z"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "UNCONSCIOUS",
+      "severity": "URGENT",
+      "mobility": "CANNOT_MOVE",
+      "count": 4,
+      "lat": 18.73393567231067,
+      "lon": 73.65752122939573,
+      "notes": "",
+      "bloodType": "B-",
+      "emergencyContact": {
+        "name": "",
+        "phone": ""
+      },
+      "timestamp": "2026-04-22T18:35:10.879Z",
+      "id": "5AE29799",
+      "triage": {
+        "level": "CRITICAL",
+        "reason": "Unconscious patient — airway management critical.",
+        "requiredBed": "ICU",
+        "requiredDoctor": "Neurologist",
+        "firstAid": "Check breathing. If breathing, place in recovery position. If not, start CPR.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-22T18:35:10.992Z",
+      "status": "ACTIVE"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "UNCONSCIOUS",
+      "severity": "UNKNOWN",
+      "mobility": "UNKNOWN",
+      "count": 1,
+      "lat": 18.73393567231067,
+      "lon": 73.65752122939573,
+      "notes": "",
+      "bloodType": null,
+      "emergencyContact": {
+        "name": "",
+        "phone": ""
+      },
+      "timestamp": "2026-04-22T18:39:27.060Z",
+      "id": "99CE28DC",
+      "triage": {
+        "level": "CRITICAL",
+        "reason": "Unconscious patient — airway management critical.",
+        "requiredBed": "ICU",
+        "requiredDoctor": "Neurologist",
+        "firstAid": "Check breathing. If breathing, place in recovery position. If not, start CPR.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-22T18:39:27.192Z",
+      "status": "DEPLOYED",
+      "timeline.dispatched": "2026-04-22T18:42:09.118Z",
+      "aiReview": "Response completed for 99CE28DC. Add Ollama for AI analysis."
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "ACCIDENT",
+      "severity": "STABLE",
+      "mobility": "CANNOT_MOVE",
+      "count": 7,
+      "lat": 18.73393567231067,
+      "lon": 73.65752122939573,
+      "notes": "",
+      "bloodType": "O-",
+      "emergencyContact": {
+        "name": "TTTTT",
+        "phone": "2020202020"
+      },
+      "timestamp": "2026-04-22T18:40:58.368Z",
+      "id": "8F6D4E7F",
+      "triage": {
+        "level": "URGENT",
+        "reason": "Road accident — trauma team on standby.",
+        "requiredBed": "ICU",
+        "requiredDoctor": "Trauma",
+        "firstAid": "Do not move the victim unless in immediate danger. Support head and neck.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-22T18:40:58.371Z",
+      "status": "DEPLOYED",
+      "timeline.dispatched": "2026-04-22T18:42:04.913Z"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "UNCONSCIOUS",
+      "severity": "UNKNOWN",
+      "mobility": "UNKNOWN",
+      "count": 1,
+      "lat": 18.765083,
+      "lon": 73.696976,
+      "notes": "",
+      "bloodType": null,
+      "emergencyContact": {
+        "name": "",
+        "phone": ""
+      },
+      "timestamp": "2026-04-25T08:34:09.470Z",
+      "id": "7228EBBD",
+      "triage": {
+        "level": "CRITICAL",
+        "reason": "Unconscious patient — airway management critical.",
+        "requiredBed": "ICU",
+        "requiredDoctor": "Neurologist",
+        "firstAid": "Check breathing. If breathing, place in recovery position. If not, start CPR.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-25T08:34:09.614Z",
+      "status": "DEPLOYED",
+      "timeline.dispatched": "2026-04-25T08:34:18.410Z"
+    },
+    {
+      "type": "EMERGENCY",
+      "subtype": "ACCIDENT",
+      "severity": "URGENT",
+      "mobility": "TRAPPED",
+      "count": 4,
+      "lat": 18.7802,
+      "lon": 73.6861,
+      "notes": "",
+      "timestamp": "2026-04-25T08:49:34.445Z",
+      "id": "9E5AC785",
+      "triage": {
+        "level": "URGENT",
+        "reason": "Road accident — trauma team on standby.",
+        "requiredBed": "ICU",
+        "requiredDoctor": "Trauma",
+        "firstAid": "Do not move the victim unless in immediate danger. Support head and neck.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-25T08:49:34.508Z",
+      "status": "ACTIVE"
+    },
+    {
+      "type": "DISASTER",
+      "subtype": "STORM",
+      "scale": "BUILDING",
+      "safety": "unsafe",
+      "count": 20,
+      "lat": 18.76425874506055,
+      "lon": 73.69731517590823,
+      "notes": "",
+      "timestamp": "2026-04-26T05:06:29.244Z",
+      "id": "B16282C9",
+      "triage": {
+        "level": "URGENT",
+        "reason": "Severe weather event — shelter-in-place advisory.",
+        "requiredBed": "General",
+        "requiredDoctor": "General Physician",
+        "firstAid": "Stay indoors away from windows. Avoid electrical equipment.",
+        "source": "keyword-engine"
+      },
+      "receivedAt": "2026-04-26T05:06:29.254Z",
+      "status": "DEPLOYED",
+      "timeline.dispatched": "2026-04-26T05:06:36.343Z",
+      "aiReview": "Response completed for B16282C9. Add Ollama for AI analysis."
     }
   ],
-  "deployments": []
+  "deployments": [
+    {
+      "sosId": "manual",
+      "targetGps": {
+        "lat": 18.5204,
+        "lon": 73.8567
+      },
+      "hospital": "Apollo Emergency Ward",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-20T16:13:46.068Z"
+    },
+    {
+      "sosId": "A37D68E1",
+      "targetGps": {
+        "lat": 18.733950109004553,
+        "lon": 73.65751454137227
+      },
+      "hospital": "Apollo Emergency Ward",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-20T16:14:26.377Z"
+    },
+    {
+      "sosId": "F82176BA",
+      "targetGps": {
+        "lat": 18.7340465,
+        "lon": 73.657753
+      },
+      "hospital": "City Central Hospital — Trauma",
+      "eta": "4 Minutes",
+      "deployedAt": "2026-04-20T16:47:02.767Z"
+    },
+    {
+      "sosId": "manual",
+      "targetGps": {
+        "lat": 18.5204,
+        "lon": 73.8567
+      },
+      "hospital": "Apollo Emergency Ward",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-20T16:47:51.734Z"
+    },
+    {
+      "sosId": "C89D9290",
+      "targetGps": {
+        "lat": 18.5204,
+        "lon": 73.8567
+      },
+      "hospital": "Sahyadri Super Speciality",
+      "eta": "7 Minutes",
+      "deployedAt": "2026-04-20T16:49:08.281Z"
+    },
+    {
+      "sosId": "3AE4DE7B",
+      "targetGps": {
+        "lat": 18.7340465,
+        "lon": 73.657753
+      },
+      "hospital": "Sahyadri Super Speciality",
+      "eta": "7 Minutes",
+      "deployedAt": "2026-04-20T16:51:00.478Z"
+    },
+    {
+      "sosId": "9E32B4E1",
+      "targetGps": {
+        "lat": 18.73393567231067,
+        "lon": 73.65752122939573
+      },
+      "hospital": "City Central Hospital — Trauma",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-20T17:53:50.670Z"
+    },
+    {
+      "sosId": "E44FC4B4",
+      "targetGps": {
+        "lat": 18.5204,
+        "lon": 73.8567
+      },
+      "hospital": "Sahyadri Super Speciality",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-20T17:54:38.711Z"
+    },
+    {
+      "sosId": "D5C54106",
+      "targetGps": {
+        "lat": 18.73393567231067,
+        "lon": 73.65752122939573
+      },
+      "hospital": "Nearest Emergency Ward",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-20T18:02:13.570Z"
+    },
+    {
+      "sosId": "manual",
+      "targetGps": {
+        "lat": 18.5204,
+        "lon": 73.8567
+      },
+      "hospital": "Nearest Emergency Ward",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-21T16:15:52.311Z"
+    },
+    {
+      "sosId": "manual",
+      "targetGps": {
+        "lat": 18.5204,
+        "lon": 73.8567
+      },
+      "hospital": "Nearest Emergency Ward",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-21T16:18:28.748Z"
+    },
+    {
+      "sosId": "B98D4C5F",
+      "targetGps": {
+        "lat": 18.729272,
+        "lon": 73.664035
+      },
+      "hospital": "City Central Hospital — Trauma",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-22T04:10:59.492Z"
+    },
+    {
+      "sosId": "6B007716",
+      "targetGps": {
+        "lat": 18.729272,
+        "lon": 73.664035
+      },
+      "hospital": "City Central Hospital — Trauma",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-22T04:16:07.935Z"
+    },
+    {
+      "sosId": "30DCC857",
+      "targetGps": {
+        "lat": 18.7340465,
+        "lon": 73.657753
+      },
+      "hospital": "City Central Hospital — Trauma",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-22T18:23:00.907Z"
+    },
+    {
+      "sosId": "manual",
+      "targetGps": {
+        "lat": 18.5204,
+        "lon": 73.8567
+      },
+      "hospital": "Nearest Emergency Ward",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-22T18:26:06.168Z"
+    },
+    {
+      "sosId": "99CE28DC",
+      "targetGps": {
+        "lat": 18.73393567231067,
+        "lon": 73.65752122939573
+      },
+      "hospital": "City Central Hospital — Trauma",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-22T18:39:34.910Z"
+    },
+    {
+      "sosId": "8F6D4E7F",
+      "targetGps": {
+        "lat": 18.73393567231067,
+        "lon": 73.65752122939573
+      },
+      "hospital": "City Central Hospital — Trauma",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-22T18:41:07.809Z"
+    },
+    {
+      "sosId": "8F6D4E7F",
+      "targetGps": {
+        "lat": 18.73393567231067,
+        "lon": 73.65752122939573
+      },
+      "hospital": "City Central Hospital — Trauma",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-22T18:42:04.917Z"
+    },
+    {
+      "sosId": "99CE28DC",
+      "targetGps": {
+        "lat": 18.73393567231067,
+        "lon": 73.65752122939573
+      },
+      "hospital": "City Central Hospital — Trauma",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-22T18:42:09.121Z"
+    },
+    {
+      "sosId": "7228EBBD",
+      "targetGps": {
+        "lat": 18.765083,
+        "lon": 73.696976
+      },
+      "hospital": "Nearest Emergency Ward",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-25T08:34:18.416Z"
+    },
+    {
+      "sosId": "B16282C9",
+      "targetGps": {
+        "lat": 18.76425874506055,
+        "lon": 73.69731517590823
+      },
+      "hospital": "City Central Hospital — Trauma",
+      "eta": "5 Minutes",
+      "deployedAt": "2026-04-26T05:06:36.345Z"
+    }
+  ],
+  "hospitals": [
+    {
+      "id": "H1",
+      "name": "Apollo Emergency Ward",
+      "lat": 18.5204,
+      "lon": 73.8567,
+      "beds": {
+        "ICU": 4,
+        "General": 20,
+        "Ventilator": 2,
+        "Emergency": 5,
+        "Pediatric": 3
+      },
+      "doctors": {
+        "Cardiologist": 1,
+        "Neurologist": 0,
+        "Trauma": 2,
+        "General Physician": 4,
+        "Emergency Specialist": 3
+      },
+      "capabilities": {
+        "cathLab": true,
+        "mri": true,
+        "ct": true,
+        "nicu": true,
+        "burnsUnit": true,
+        "dialysis": true,
+        "ventilators": 0,
+        "traumaCenter": true
+      },
+      "equipment_status": {
+        "ct": "available"
+      },
+      "bloodBank": {
+        "A+": 5,
+        "A-": 7,
+        "B+": 6,
+        "B-": 6,
+        "AB+": 4,
+        "AB-": 5,
+        "O+": 6,
+        "O-": 8
+      },
+      "qualityScore": {
+        "cardiac": 0.7,
+        "trauma": 0.7,
+        "neuro": 0.7,
+        "burns": 0.7,
+        "overall": 0.7
+      }
+    },
+    {
+      "id": "H2",
+      "name": "City Central Hospital — Trauma",
+      "lat": 18.5304,
+      "lon": 73.8667,
+      "beds": {
+        "ICU": 0,
+        "General": 15,
+        "Ventilator": 1,
+        "Emergency": 4,
+        "Pediatric": 1
+      },
+      "doctors": {
+        "Cardiologist": 0,
+        "Neurologist": 0,
+        "Trauma": 1,
+        "General Physician": 2,
+        "Emergency Specialist": 0
+      },
+      "capabilities": {
+        "cathLab": false,
+        "mri": false,
+        "ct": true,
+        "nicu": false,
+        "burnsUnit": false,
+        "dialysis": false,
+        "ventilators": 0,
+        "traumaCenter": false
+      },
+      "equipment_status": {
+        "ct": "available"
+      },
+      "bloodBank": {
+        "A+": 0,
+        "A-": 0,
+        "B+": 0,
+        "B-": 0,
+        "AB+": 0,
+        "AB-": 0,
+        "O+": 0,
+        "O-": 0
+      },
+      "qualityScore": {
+        "cardiac": 0.7,
+        "trauma": 0.7,
+        "neuro": 0.7,
+        "burns": 0.7,
+        "overall": 0.7
+      }
+    },
+    {
+      "id": "H3",
+      "name": "Sahyadri Super Speciality",
+      "lat": 18.5104,
+      "lon": 73.8467,
+      "beds": {
+        "ICU": 4,
+        "General": 30,
+        "Ventilator": 4,
+        "Emergency": 10,
+        "Pediatric": 5
+      },
+      "doctors": {
+        "Cardiologist": 2,
+        "Neurologist": 0,
+        "Trauma": 1,
+        "General Physician": 5,
+        "Emergency Specialist": 4
+      },
+      "capabilities": {
+        "cathLab": false,
+        "mri": false,
+        "ct": true,
+        "nicu": false,
+        "burnsUnit": false,
+        "dialysis": false,
+        "ventilators": 0,
+        "traumaCenter": false
+      },
+      "equipment_status": {
+        "ct": "available"
+      },
+      "bloodBank": {
+        "A+": 0,
+        "A-": 0,
+        "B+": 0,
+        "B-": 0,
+        "AB+": 0,
+        "AB-": 0,
+        "O+": 0,
+        "O-": 0
+      },
+      "qualityScore": {
+        "cardiac": 0.7,
+        "trauma": 0.7,
+        "neuro": 0.7,
+        "burns": 0.7,
+        "overall": 0.7
+      }
+    }
+  ],
+  "specialistAlerts": [],
+  "anomalies": [],
+  "forecast": [],
+  "massCasualtyEvents": []
 }
