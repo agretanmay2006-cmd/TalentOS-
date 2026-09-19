@@ -1,0 +1,260 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------
+// ENUMS (Simulated as Strings in SQLite)
+// ---------------------------------------------------------
+// Note: SQLite does not natively support enums in Prisma. 
+// We are using Strings for fields that were defined as ENUMs.
+// Validation should happen at the application level.
+
+model User {
+  id              String    @id @default(uuid())
+  email           String    @unique
+  password_hash   String
+  role            String    // 'candidate', 'recruiter', 'admin'
+  status          String    // 'active', 'inactive', 'suspended'
+  last_login      DateTime?
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+
+  candidate       Candidate?
+  jobs_created    Job[]
+  tests_created   Test[]
+  hiring_decisions HiringDecision[]
+  audit_logs      AuditLog[]
+}
+
+model Candidate {
+  id                String    @id @default(uuid())
+  user_id           String    @unique
+  user              User      @relation(fields: [user_id], references: [id])
+  full_name         String?
+  phone             String?
+  location          String?
+  profile_photo_url String?
+  resume_url        String?
+  bio               String?
+  education         String?   // Storing JSON as string in SQLite
+  experience        String?   // Storing JSON as string in SQLite
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+
+  skills            CandidateSkill[]
+  certificates      Certificate[]
+  documents         CandidateDocument[]
+  progress          CandidateProgress?
+  progress_history  ProgressHistory[]
+  applications      Application[]
+  tests_taken       CandidateTest[]
+  employee          Employee?
+}
+
+model Skill {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  category    String?
+  description String?
+
+  candidate_skills CandidateSkill[]
+}
+
+model CandidateSkill {
+  id                String    @id @default(uuid())
+  candidate_id      String
+  candidate         Candidate @relation(fields: [candidate_id], references: [id])
+  skill_id          String
+  skill             Skill     @relation(fields: [skill_id], references: [id])
+  proficiency_level String    // 'beginner', 'intermediate', 'advanced', 'expert'
+  experience_years  Float?
+  verified          Boolean   @default(false)
+  created_at        DateTime  @default(now())
+}
+
+model Certificate {
+  id                   String    @id @default(uuid())
+  candidate_id         String
+  candidate            Candidate @relation(fields: [candidate_id], references: [id])
+  certificate_name     String?
+  issuing_organization String?
+  certificate_number   String?
+  issue_date           DateTime?
+  expiry_date          DateTime?
+  document_url         String?
+  verification_status  String    // 'pending', 'verified', 'rejected'
+  uploaded_at          DateTime  @default(now())
+  verified_at          DateTime?
+}
+
+model CandidateDocument {
+  id                  String    @id @default(uuid())
+  candidate_id        String
+  candidate           Candidate @relation(fields: [candidate_id], references: [id])
+  document_type       String?
+  document_url        String?
+  verification_status String    // 'pending', 'verified', 'rejected'
+  uploaded_at         DateTime  @default(now())
+  verified_at         DateTime?
+}
+
+model CandidateProgress {
+  id                 String    @id @default(uuid())
+  candidate_id       String    @unique
+  candidate          Candidate @relation(fields: [candidate_id], references: [id])
+  overall_progress   Float?
+  skill_progress     Float?
+  test_progress      Float?
+  profile_completion Float?
+  updated_at         DateTime  @updatedAt
+}
+
+model ProgressHistory {
+  id           String    @id @default(uuid())
+  candidate_id String
+  candidate    Candidate @relation(fields: [candidate_id], references: [id])
+  metric       String?
+  value        Float?
+  recorded_at  DateTime  @default(now())
+}
+
+model Job {
+  id                  String    @id @default(uuid())
+  title               String?
+  description         String?
+  department          String?
+  location            String?
+  experience_required String?
+  status              String    // 'open', 'closed', 'paused'
+  created_by          String
+  user                User      @relation(fields: [created_by], references: [id])
+  created_at          DateTime  @default(now())
+  closing_date        DateTime?
+
+  applications        Application[]
+}
+
+model Application {
+  id           String    @id @default(uuid())
+  candidate_id String
+  candidate    Candidate @relation(fields: [candidate_id], references: [id])
+  job_id       String
+  job          Job       @relation(fields: [job_id], references: [id])
+  status       String    // 'applied', 'screening', 'shortlisted', 'testing', 'interview', 'selected', 'rejected', 'withdrawn'
+  applied_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+
+  hiring_decisions HiringDecision[]
+}
+
+model Test {
+  id               String    @id @default(uuid())
+  title            String?
+  description      String?
+  test_type        String?
+  duration_minutes Int?
+  total_marks      Int?
+  passing_marks    Int?
+  created_by       String
+  user             User      @relation(fields: [created_by], references: [id])
+  created_at       DateTime  @default(now())
+
+  questions        TestQuestion[]
+  candidate_tests  CandidateTest[]
+}
+
+model TestQuestion {
+  id             String    @id @default(uuid())
+  test_id        String
+  test           Test      @relation(fields: [test_id], references: [id])
+  question       String?
+  question_type  String?
+  options        String?   // JSON string
+  correct_answer String?
+  marks          Int?
+  difficulty     String?   // 'easy', 'medium', 'hard'
+
+  answers        TestAnswer[]
+}
+
+model CandidateTest {
+  id           String    @id @default(uuid())
+  candidate_id String
+  candidate    Candidate @relation(fields: [candidate_id], references: [id])
+  test_id      String
+  test         Test      @relation(fields: [test_id], references: [id])
+  status       String    // 'assigned', 'started', 'completed', 'expired'
+  score        Float?
+  percentage   Float?
+  started_at   DateTime?
+  completed_at DateTime?
+
+  answers      TestAnswer[]
+}
+
+model TestAnswer {
+  id                String        @id @default(uuid())
+  candidate_test_id String
+  candidate_test    CandidateTest @relation(fields: [candidate_test_id], references: [id])
+  question_id       String
+  question          TestQuestion  @relation(fields: [question_id], references: [id])
+  answer            String?
+  marks_obtained    Float?
+}
+
+model HiringDecision {
+  id             String      @id @default(uuid())
+  application_id String
+  application    Application @relation(fields: [application_id], references: [id])
+  decision       String      // 'selected', 'rejected', 'on_hold'
+  reason         String?
+  decided_by     String
+  user           User        @relation(fields: [decided_by], references: [id])
+  decision_date  DateTime    @default(now())
+}
+
+model Employee {
+  id                String    @id @default(uuid())
+  candidate_id      String    @unique
+  candidate         Candidate @relation(fields: [candidate_id], references: [id])
+  employee_code     String    @unique
+  designation       String?
+  department        String?
+  joining_date      DateTime?
+  employment_status String    // 'active', 'probation', 'resigned', 'terminated'
+  created_at        DateTime  @default(now())
+
+  joining_documents JoiningDocument[]
+}
+
+model JoiningDocument {
+  id                  String    @id @default(uuid())
+  employee_id         String
+  employee            Employee  @relation(fields: [employee_id], references: [id])
+  document_type       String?
+  document_url        String?
+  signed              Boolean   @default(false)
+  signed_at           DateTime?
+  verification_status String    // 'pending', 'verified', 'rejected'
+  uploaded_at         DateTime  @default(now())
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  user_id     String
+  user        User     @relation(fields: [user_id], references: [id])
+  action      String?
+  entity_type String?
+  entity_id   String?
+  metadata    String?  // JSON string
+  ip_address  String?
+  created_at  DateTime @default(now())
+}

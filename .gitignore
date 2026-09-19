@@ -1,6 +1,51 @@
+# Dependencies
 node_modules/
-data/db.json
-.DS_Store
+.pnp
+.pnp.js
+
+# Build Outputs & Distribution
+dist/
+build/
+out/
+.next/
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# SQLite & Database Artifacts
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+prisma/dev.db
+dev.db
+
+# Logs & Debugging
 *.log
-# Added by code-review-graph
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+test_report.json
+
+# System & Editor Files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Analysis & Graph Tools
 .code-review-graph/
+.coverage
+coverage/
+
