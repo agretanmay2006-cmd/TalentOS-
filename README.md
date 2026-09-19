@@ -54,32 +54,24 @@ An end-to-end, multi-agent AI talent operating system and distributed intelligen
 ## 📁 Repository Structure
 
 ```text
-TalentOS/
+.
 ├── client/                      # Frontend SPA (React + Vite + Tailwind CSS + Monaco Editor)
 │   ├── src/
 │   │   ├── components/          # UI components (CandidatePortal, RecruiterCockpit, ShadowSprint Workspace)
-│   │   ├── context/             # Auth & Global state context
-│   │   └── App.jsx              # Main client application shell
+│   │   ├── pages/               # Admin, Candidate, Recruiter, and Auth portal pages
+│   │   ├── context/             # Auth & TalentOS state context
+│   │   └── App.jsx              # Main client application shell & role-based routing
 │   ├── package.json
 │   └── vite.config.js
 │
 ├── server/                      # Backend API Services & Agent Engines
-│   ├── agents/                  # 6 Autonomous Agent implementation services
-│   │   ├── agent1-ingestion.js  # Agent 1: Resume ingestion & authenticity
-│   │   ├── agent2-eventPitch.js # Agent 2: Multimodal VLM pitch evaluation
-│   │   ├── agent3-codeIntel.js  # Agent 3: Git AST parser & complexity
-│   │   ├── agent4-shadowSprint.js # Agent 4: ShadowSprint IDE & auto-grader
-│   │   ├── agent5-graphSearch.js # Agent 5: Digital twin & Neo4j/Qdrant search
-│   │   └── agent6-reporting.js  # Agent 6: Fraud matrix & career roadmaps
-│   ├── config/                  # Gemini, Neo4j, Qdrant, & database connectors
-│   ├── db/                      # Graph, vector, and relational database clients
-│   ├── routes/                  # Express REST endpoints
-│   ├── prisma/                  # Prisma database schema & migrations
-│   └── server.js                # Main backend server entry point
-│
-├── TalentOS_App/                # Extended enterprise modules & test suite
-│   ├── client/                  # Extended client portal with admin & candidate routes
-│   └── server/                  # Agent test runners & live integration tests
+│   ├── config/                  # Gemini LLM, Neo4j, & Qdrant database connectors
+│   ├── routes/                  # Express REST route handlers (ATS, Auth, Copilot, Reporting, Twin)
+│   ├── services/                # 6 Autonomous Agent implementation services & storage
+│   ├── prisma/                  # Prisma schema & migrations
+│   ├── test_all_agents.mjs      # Master Test Suite runner (83+ assertions)
+│   ├── server.js                # Express & Socket.io entry point
+│   └── package.json
 │
 ├── .gitignore                   # Git exclusion rules
 └── README.md                    # Project documentation
@@ -181,7 +173,7 @@ TalentOS includes extensive unit and end-to-end agent validation test suites.
 
 ```bash
 # Run the Master Test Suite (All 6 Agents & Mock Assertions)
-cd TalentOS_App/server
+cd server
 node test_all_agents.mjs
 
 # Run Individual Agent Unit Tests
@@ -191,9 +183,9 @@ node test_agent3.mjs
 node test_agent4.mjs
 node test_agent5.mjs
 
-# Run Comprehensive Server Tests
-cd ../../server
-node run_comprehensive_tests.js
+# Run Live Integration & E2E Tests
+node test_phase5_e2e.mjs
+node test_live_db_integration.mjs
 ```
 
 ---
